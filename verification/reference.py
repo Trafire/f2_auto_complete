@@ -45,12 +45,12 @@ VERIFICATION['system'] = {
 }
 
 VERIFICATION['screens'] = {
-    'text_login_menu_1': ['║      01)   FleuraMetz Holland         ║','║      07)   FleuraMetz Toronto         ║' ],
+    'text_login_menu_1': ['║      01)   FleuraMetz Holland         ║', '║      07)   FleuraMetz Toronto         ║'],
 
     'text_login_menu_2_large': [{'target': '║       1)   Toronto                    ║',
                                  'location': (5, 18)},
                                 {'target': '© Uniware Computer Systems BV', 'location': (1, 24)}],
-    'text_login_menu_2': ['║       1)   Toronto                    ║','║       3)   Toronto Testsysteem        ║'],
+    'text_login_menu_2': ['║       1)   Toronto                    ║', '║       3)   Toronto Testsysteem        ║'],
     'main_menu': [{'target': 'Main Menu', 'location': (2, 92)},
                   {'target': 'Orders', 'location': (5, 4)},
                   {'target': '© Uniware Computer Systems BV',
@@ -96,9 +96,42 @@ VERIFICATION['screens'] = {
     "stock_per_location-flowers-location-price_level": [{'target': 'Pricegroup:    {level}', 'location': (4, 59)}],
     "lot_info": [{'target': 'Intern partijnummer  : {lot_number}', 'location': (18, 97)}],
 
-
+    'main_menu-purchase': [{'target': 'Purchase', 'location': (2, 92)}, {'target': 'Purchase', 'location': (5, 55)},
+                           {'target': 'Purchase', 'location': (6, 4)}, {'target': 'Purchase', 'location': (7, 29)},
+                           {'target': 'Purchase', 'location': (8, 55)}, {'target': 'Purchase', 'location': (9, 29)},
+                           {'target': 'Purchase', 'location': (11, 55)},
+                           {'target': 'Purchase/distribute', 'location': (5, 55)}],
+    'main_menu-purchase-default': [{'target': 'Purchase', 'location': (2, 92)},
+                                   {'target': 'Purchase', 'location': (5, 55)},
+                                   {'target': 'Purchase', 'location': (6, 4)},
+                                   {'target': 'Purchase', 'location': (7, 29)},
+                                   {'target': 'Purchase', 'location': (8, 55)},
+                                   {'target': 'Purchase', 'location': (9, 29)},
+                                   {'target': 'Purchase', 'location': (11, 55)},
+                                   {'target': 'Purchase/distribute', 'location': (5, 55)}],
+    'main_menu-purchase-default-purchase_distribute': [{'target': 'Purchase', 'location': (2, 92)},
+                                                       {'target': 'Purchase', 'location': (5, 55)},
+                                                       {'target': 'Purchase', 'location': (6, 4)},
+                                                       {'target': 'Purchase', 'location': (7, 29)},
+                                                       {'target': 'Purchase', 'location': (8, 55)},
+                                                       {'target': 'Purchase', 'location': (9, 29)},
+                                                       {'target': 'Purchase', 'location': (11, 55)},
+                                                       {'target': 'Purchase/distribute', 'location': (5, 55)}],
+    'main_menu-purchase-default-purchase_distribute_flowers': [
+        {'target': '║Flowers             ║', 'location': (4, 54)},
+        {'target': 'Purchase/distribute', 'location': (2, 92)}],
+    'main_menu-purchase-default_insert_virtual_purchase': [{'target': 'Purchase', 'location': (2, 92)},
+                                                           {'target': 'Purchase', 'location': (5, 55)},
+                                                           {'target': 'Purchase', 'location': (6, 4)},
+                                                           {'target': 'Purchase', 'location': (7, 29)},
+                                                           {'target': 'Purchase', 'location': (8, 55)},
+                                                           {'target': 'Purchase', 'location': (9, 29)},
+                                                           {'target': 'Purchase', 'location': (11, 55)},
+                                                           {'target': 'Purchase/distribute', 'location': (5, 55)}],
+    'main_menu-purchase-default_insert_virtual_purchase_flowers': [
+        {'target': '║Flowers             ║', 'location': (4, 54)},
+        {'target': 'Insert virtual purchases', 'location': (2, 92)}]
 }
-
 VERIFICATION['navigation'] = {
     'main_menu-maintenance_data': 'Maintenance data',
     'main_menu-maintenance_data-pricelists': 'Pricelists',
@@ -108,7 +141,12 @@ VERIFICATION['navigation'] = {
     'main_menu-stock-stock_per_location': 'Stock per location',
     'main_menu-stock-stock_per_location-edit_stock': '{HOME}',
     "main_menu-stock-stock_per_location-edit_stock-date-flowers": 'Flowers',
-
+    'main_menu-purchase': "Purchase",
+    'main_menu-purchase-default': '{HOME}{ENTER}',
+    'main_menu-purchase-default-purchase_distribute': '{HOME}{ENTER}',
+    'main_menu-purchase-default-purchase_distribute_flowers': '',
+    'main_menu-purchase-default_insert_virtual_purchase': 'Insert virtual',
+    'main_menu-purchase-default_insert_virtual_purchase_flowers': '',
 }
 
 VERIFICATION['price_list'] = {

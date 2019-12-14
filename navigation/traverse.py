@@ -6,6 +6,7 @@ import login
 import time
 import copy
 
+
 def traverse_menu(previous_menu, menu_str, system, attempt=0, ):
     if not f2.is_system_open(tries=25):
         login.sign_in_toronto(login.username, login.password, system)
@@ -205,14 +206,59 @@ def price_list_category(price_list, date, category):
     window_data[1]['target'] = price_list_name
 
 
+########### Purchasing ##############
+
+def main_menu_purchase(system, attempt=0):
+    keyword = 'main_menu-purchase'
+    return traverse_menu(main_menu, keyword, system, attempt=0)
+
+
+def main_menu_purchase_default(system, attempt=0):
+    keyword = 'main_menu-purchase-default'
+    return traverse_menu(main_menu_purchase, keyword, system, attempt=0)
+
+
+def main_menu_purchase_default_purchase_distribute(system, attempt=0):
+    keyword = 'main_menu-purchase-default-purchase_distribute'
+    return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
+
+
+
+def main_menu_purchase_default_purchase_distribute_flowers(system, attempt=0):
+    keyword = 'main_menu-purchase-default-purchase_distribute_flowers'
+    return traverse_menu(main_menu_purchase_default_purchase_distribute, keyword, system, attempt=0)
+
+# to purchase menu
+def main_menu_purchase_default_purchase_distribute_flowers_purchase(system, purchase_date, attempts=0):
+    if main_menu_purchase_default_purchase_distribute_flowers(system):
+        keyboard.write_text(purchase_date)
+        keyboard.enter(3)
+
+# to insert purchase
+
+def main_menu_purchase_default_insert_virtual_purchase(system, attempts=0):
+    keyword = 'main_menu-purchase-default_insert_virtual_purchase'
+    return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
+
+def main_menu_purchase_default_insert_virtual_purchase_flowers(system, attempts=0):
+    keyword = 'main_menu-purchase-default_insert_virtual_purchase_flowers'
+    return traverse_menu(main_menu_purchase_default_insert_virtual_purchase, keyword, system, attempt=0)
+
+def main_menu_purchase_default_insert_virtual_purchase_flowers_date(system,purchase_date, attempts=0):
+    if main_menu_purchase_default_insert_virtual_purchase_flowers(system):
+        keyboard.write_text(purchase_date)
+        keyboard.enter()
+
+
+
 
 ## print(main_menu_maintainance_data_pricelists_edit_pricelist_flowers_select('051', '18/11/19', ))
 # print(main_menu_maintainance_data_pricelists_edit_pricelist_flowers_select('051', '18/11/19', ))
-#cmd = stock_per_location_location(system, '00/00/00', '31/12/30', 'col')
+# cmd = stock_per_location_location(system, '00/00/00', '31/12/30', 'col')
 # cmd = main_menu_stock_stock_per_location_edit_stock(system)
-#print(cmd)
+# print(cmd)
 
-if __name__ =='__main__':
+if __name__ == '__main__':
     system = 'f2_canada_real'
     from_date = '00/00/00'
     to_date = '30/11/45'
@@ -223,4 +269,3 @@ if __name__ =='__main__':
     stock_per_location_location(system, from_date, to_date, location, attempt=0)
     location = 'col'
     stock_per_location_location(system, from_date, to_date, location, attempt=0)
-

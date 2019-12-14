@@ -32,30 +32,3 @@ def get_base_class(engine, table):
     return Base.classes[table]
 
 
-
-
-
-
-'''
-from sqlalchemy import MetaData, Table, create_engine
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
-
-engine = create_engine('postgresql://fmantoine:$pl4nt3n@localhost:3306/crm')
-Base = automap_base()
-Base.prepare(engine, reflect=True)
-
-Users = Base.classes.f2connection_assortment
-session = Session(engine)
-
-res = session.query(Users).first()
-print(res.name)
-
-
-table = 'f2connection_assortment'
-session, base, = get_session(table)
-res = session.query(base).first()
-print(res.name)
-help(base)
-for b in base:
-    print(b)'''

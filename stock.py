@@ -14,6 +14,7 @@ SHIPMENT_LOCATIONS = ['ec', 'nl', 'col', 'on']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
 system = 'f2_canada_real'
+#system = 'f2_canada_test'
 
 
 def price_item(price):
@@ -237,69 +238,79 @@ def price_location(system, from_date, to_date, location, price_level):
             else:
                 insert_data.insert_weekly_price(system, week, year, assortment_code, None)
 
+def price_system():
+    from_date = '00/00/00'
+    to_date = '30/11/45'
+    price_level = 1
+    # price_location_quick(system, from_date, to_date, location, price_level)
 
-location = 'nl'
+    # print('done')
+    for location in SHIPMENT_LOCATIONS:
+        print(f"location: {location}")
+        price_location_quick(system, from_date, to_date, location, price_level)
+
+
 # get_lots_to_price(location)
 # print(f2_page.verify_lot_info('641632'))
 # print(get_lots_to_price(location))
 
 # price_lot(system, '641632', location, '4.19')
 
-
-from_date = '00/00/00'
-to_date = '30/11/45'
-price_level = 1
-#price_location_quick(system, from_date, to_date, location, price_level)
-
-#print('done')
-for location in SHIPMENT_LOCATIONS:
-    print(f"location: {location}")
-    price_location_quick(system, from_date, to_date, location, price_level)
-    #pass
-
+if __name__ == "__main__":
+    from_date = '00/00/00'
+    to_date = '30/11/45'
+    price_level = 1
     #price_location_quick(system, from_date, to_date, location, price_level)
 
+    #print('done')
+    for location in SHIPMENT_LOCATIONS:
+        print(f"location: {location}")
+        price_location_quick(system, from_date, to_date, location, price_level)
+        #pass
 
-# l = '639733'
-# print(get_stock_information(system, location, l))
-
-# l = get_lots_to_price_quick(location, from_date, to_date)
-# l.sort()
-# print(l)
-'''
-lot = '641913'
-lot_info = get_stock_information(system, location, lot)
-print(lot_info)
-assortment_code = lot_info['assortment_code']
-week = dates.get_week(lot_info['purchase_date'])
-year = dates.get_year(lot_info['purchase_date'])
-price = get_data.check_assortment_price(assortment_code, week, year, system)
-
-if price:
-    if go_to_lot(system, location, lot):
-        price_lot(system, lot, location, price)
-
-# data = get_stock_lots(system, from_date, to_date, location, price_level)
-# print(data)
-# price_location(system, from_date, to_date, location, price_level)
+        #price_location_quick(system, from_date, to_date, location, price_level)
 
 
+    # l = '639733'
+    # print(get_stock_information(system, location, l))
 
-l = get_stock_information(system, location, lot)
-print(l)
-
-data = get_stock_lots(system, from_date, to_date, location, price_level)
-print(data)
-print(len(data))
-to_price = []
-for d in data:
-    lot_data = data[d]
-    print(lot_data)
-    if not check_lot_priced(system, lot_data):
-        to_price.append(d)
-
-    print(d, go_to_lot(system, location, d))
-    print(lots.get_lot_info())
-
-print = to_price
-'''
+    # l = get_lots_to_price_quick(location, from_date, to_date)
+    # l.sort()
+    # print(l)
+    '''
+    lot = '641913'
+    lot_info = get_stock_information(system, location, lot)
+    print(lot_info)
+    assortment_code = lot_info['assortment_code']
+    week = dates.get_week(lot_info['purchase_date'])
+    year = dates.get_year(lot_info['purchase_date'])
+    price = get_data.check_assortment_price(assortment_code, week, year, system)
+    
+    if price:
+        if go_to_lot(system, location, lot):
+            price_lot(system, lot, location, price)
+    
+    # data = get_stock_lots(system, from_date, to_date, location, price_level)
+    # print(data)
+    # price_location(system, from_date, to_date, location, price_level)
+    
+    
+    
+    l = get_stock_information(system, location, lot)
+    print(l)
+    
+    data = get_stock_lots(system, from_date, to_date, location, price_level)
+    print(data)
+    print(len(data))
+    to_price = []
+    for d in data:
+        lot_data = data[d]
+        print(lot_data)
+        if not check_lot_priced(system, lot_data):
+            to_price.append(d)
+    
+        print(d, go_to_lot(system, location, d))
+        print(lots.get_lot_info())
+    
+    print = to_price
+    '''

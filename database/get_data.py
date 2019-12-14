@@ -75,6 +75,8 @@ def remove_null_priced_lots(lots, system):
                 
                     
                     ;'''
+    if len(lots) == 1:
+        query = query.replace(f'IN {lots}', f"= '{lots[0]}'")
     answer = connection.execute(query).fetchall()
     result = []
     for l in answer:
@@ -113,11 +115,17 @@ def get_articles_codes(system):
 
 def get_new_lots(system, lots):
     lots = tuple(lots)
+
     engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT lot
                     FROM f2connection_pricedlots
                     WHERE lot IN {lots} and system='{system}';'''
+
+    if len(lots) == 1:
+        query = f'''SELECT lot
+                            FROM f2connection_pricedlots
+                            WHERE lot = '{lots[0]}' and system='{system}';'''
     answer = connection.execute(query).fetchall()
     result = []
     for l in answer:
