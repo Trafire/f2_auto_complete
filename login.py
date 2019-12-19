@@ -67,7 +67,6 @@ def sign_in_toronto(username, password, system, attempts=0):
 username = f2_password['username']
 password = f2_password['password']
 system = 'f2_canada_real'
-print("here")
-sign_in_toronto(username, password,system)
+
 if __name__ == '__main__':
     sign_in_toronto(username, password,system)

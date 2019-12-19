@@ -1,10 +1,11 @@
 from interface import window, keyboard
 from verification.reference import VERIFICATION
 from verification import f2
-from parse import parse
+from parse import parse, dates
 import login
 import time
 import copy
+import datetime
 
 
 def traverse_menu(previous_menu, menu_str, system, attempt=0, ):
@@ -21,7 +22,11 @@ def traverse_menu(previous_menu, menu_str, system, attempt=0, ):
     if previous_menu(system):
         window_data = VERIFICATION['screens'][menu_str]
         cmd = VERIFICATION['navigation'][menu_str]
-        keyboard.write_text(cmd)
+        print(cmd)
+        if '{' in cmd:
+            keyboard.write_mix(cmd)
+        else:
+            keyboard.write_text(cmd)
         keyboard.enter(1)
         if not f2.verify(window_data, 50):
             return traverse_menu(previous_menu, menu_str, system, attempt=attempt + 1)
@@ -46,6 +51,8 @@ def main_menu_call(attempt=0):
 
 def main_menu(system):
     window_data = VERIFICATION['system'][system]
+    if not f2.is_system_open(tries=25):
+        login.sign_in_toronto(login.username, login.password, system)
     if not f2.verify(window_data, attempts=500):
         login.sign_in_toronto(login.username, login.password, system)
     main_menu_call()
@@ -71,6 +78,13 @@ def main_menu_stock_stock_per_location_edit_stock(system, attempt=0):
 def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0):
     if attempt > 10:
         return False
+
+    if type(from_date) == datetime.datetime:
+        from_date = dates.get_menu_date(from_date)
+
+    if type(to_date) == datetime.datetime:
+        to_date = dates.get_menu_date(to_date)
+
     if main_menu_stock_stock_per_location_edit_stock(system, attempt=0):
         keyboard.write_text(from_date)
         keyboard.enter()
@@ -94,11 +108,18 @@ def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_dat
 def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0):
     if attempt > 10:
         return False
+
+    if type(from_date) == datetime.datetime:
+        from_date = dates.get_menu_date(from_date)
+
+    if type(to_date) == datetime.datetime:
+        to_date = dates.get_menu_date(to_date)
+
     if main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0):
         keyword = "main_menu-stock-stock_per_location-edit_stock-date-flowers"
         window_data = VERIFICATION['screens'][keyword]
         cmd = VERIFICATION['navigation'][keyword]
-        keyboard.write_text(cmd)
+        keyboard.write_mix(cmd)
         keyboard.enter(1)
         if not f2.verify(window_data, 50):
             return main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt + 1)
@@ -223,16 +244,21 @@ def main_menu_purchase_default_purchase_distribute(system, attempt=0):
     return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
 
 
-
 def main_menu_purchase_default_purchase_distribute_flowers(system, attempt=0):
     keyword = 'main_menu-purchase-default-purchase_distribute_flowers'
     return traverse_menu(main_menu_purchase_default_purchase_distribute, keyword, system, attempt=0)
 
+
 # to purchase menu
 def main_menu_purchase_default_purchase_distribute_flowers_purchase(system, purchase_date, attempts=0):
+    if type(purchase_date) == datetime.datetime:
+        purchase_date = dates.get_menu_date(purchase_date)
+
     if main_menu_purchase_default_purchase_distribute_flowers(system):
         keyboard.write_text(purchase_date)
-        keyboard.enter(3)
+        keyboard.enter()
+        keyboard.f11()
+
 
 # to insert purchase
 
@@ -240,16 +266,40 @@ def main_menu_purchase_default_insert_virtual_purchase(system, attempts=0):
     keyword = 'main_menu-purchase-default_insert_virtual_purchase'
     return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
 
+
 def main_menu_purchase_default_insert_virtual_purchase_flowers(system, attempts=0):
     keyword = 'main_menu-purchase-default_insert_virtual_purchase_flowers'
     return traverse_menu(main_menu_purchase_default_insert_virtual_purchase, keyword, system, attempt=0)
 
-def main_menu_purchase_default_insert_virtual_purchase_flowers_date(system,purchase_date, attempts=0):
+
+def main_menu_purchase_default_insert_virtual_purchase_flowers_date(system, purchase_date, attempts=0):
     if main_menu_purchase_default_insert_virtual_purchase_flowers(system):
         keyboard.write_text(purchase_date)
         keyboard.enter()
 
 
+# to input purchase
+
+def main_menu_purchase_default_input_purchases(system, attempts=0):
+    keyword = 'main_menu-purchase-default-input_purchases'
+    return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
+
+
+def main_menu_purchase_default_input_purchases_flowers(system, attempts=0):
+    keyword = 'main_menu-purchase-default-input_purchases-flowers'
+    return traverse_menu(main_menu_purchase_default_input_purchases, keyword, system, attempt=0)
+
+
+def main_menu_purchase_default_input_purchases_flowers_date(system, purchase_date, attempts=0):
+    if type(purchase_date) == datetime.datetime:
+        purchase_date = dates.get_menu_date(purchase_date)
+
+    if main_menu_purchase_default_input_purchases_flowers(system):
+        keyboard.write_text(purchase_date)
+        keyboard.enter()
+        keyboard.shift_f11()
+        keyboard.home(3)
+        return True
 
 
 ## print(main_menu_maintainance_data_pricelists_edit_pricelist_flowers_select('051', '18/11/19', ))
@@ -264,8 +314,4 @@ if __name__ == '__main__':
     to_date = '30/11/45'
     price_level = 1
     location = 'on'
-    stock_per_location_location(system, from_date, to_date, location, attempt=0)
-    location = 'ec'
-    stock_per_location_location(system, from_date, to_date, location, attempt=0)
-    location = 'col'
-    stock_per_location_location(system, from_date, to_date, location, attempt=0)
+    main_menu_stock_stock_per_location(system)

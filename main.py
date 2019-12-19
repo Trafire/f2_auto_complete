@@ -31,33 +31,42 @@ def add_to_startup(executable, file_path=""):
 #add_to_startup(sys.executable)
 
 # log into system
-username = f2_password['username']
-password = f2_password['password']
-system = 'f2_canada_real'
-closef2.close()
-time.sleep(1)
-login.sign_in_toronto(username, password, system, attempts=0)
 
-while True:
-    try:
-        # if database isn't open yet will get error
-        get_data.check_priced_lots_bulk("12345", "test")
-        break
-    except:
-        time.sleep(.5)
-        print("Waiting for Database connection")
+if __name__ == '__main__':
+    username = f2_password['username']
+    password = f2_password['password']
+    system = 'f2_canada_real'
+    closef2.close()
+    time.sleep(1)
+    login.sign_in_toronto(username, password, system, attempts=0)
 
-index = 0        
-while True:
-    index += 1
-    
-    if index % 30 == 0 :
-        closef2.close()
-        login.sign_in_toronto(username, password, system, attempts=0)
-    elif index > 998 == 0:
-        closef2.close()
-        os.system("shutdown /r /t 1")
-    else:
-        stock.price_system()
-    
+    while True:
+        try:
+            # if database isn't open yet will get error
+            get_data.check_priced_lots_bulk("12345", "test")
+            break
+        except:
+            time.sleep(.5)
+            print("Waiting for Database connection")
 
+    index = 0
+    while True:
+        index += 1
+
+        if index % 30 == 0 :
+            closef2.close()
+            login.sign_in_toronto(username, password, system, attempts=0)
+        elif index > 998 == 0:
+            closef2.close()
+            os.system("shutdown /r /t 1")
+        else:
+            try:
+                stock.price_system()
+            except:
+                try:
+                    closef2.close()
+                    login.sign_in_toronto(username, password, system, attempts=0)
+                    stock.price_system()
+                except:
+                    closef2.close()
+                    os.system("shutdown /r /t 1")

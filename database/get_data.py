@@ -132,6 +132,14 @@ def get_new_lots(system, lots):
         result.append(l[0])
     return [x for x in lots if x not in result]
 
+def get_purchse_lot(system, lot):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''SELECT *
+                        FROM f2connection_purchases
+                        WHERE lot='{lot}' and system='{system}';'''
+    answer = connection.execute(query).fetchone()
+    return answer
 
 if '__main__' == __name__:
     system = 'f2_canada_real'

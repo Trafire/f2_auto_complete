@@ -1,11 +1,11 @@
 from interface import window
-#from autof2.readf2 import parse
+# from autof2.readf2 import parse
 import re
-
 
 
 def get_parsed_screen():
     return process_scene(window.get_window())
+
 
 def get_parsed_screen_body():
     return process_scene(window.get_window())[6:-4]
@@ -75,5 +75,25 @@ def get_stock_lots():
             lot = row[1].strip()[:-1]
             rdata = {'lot': lot,
                      'price': row[11].replace(',', '.').strip()}
+            data[lot] = (rdata)
+    return data
+
+
+def get_input_purchase_lots(system, purchase_date):
+    uscreen = window.get_window()
+    screen = process_scene(uscreen)
+    data = {}
+    for s in screen[6:-4]:
+        row = s.split('║')
+        lot = row[1].strip()
+
+        rdata = {
+            'system': system,
+            'purchase_date': purchase_date,
+            'lot': lot,
+            'landed_price': row[6].replace(',', '.').strip(),
+            'supplier_code': row[8].strip()
+        }
+        if rdata['lot'].isdigit():
             data[lot] = (rdata)
     return data

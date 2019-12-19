@@ -116,10 +116,11 @@ def compare(p):
 
 if __name__ == '__main__':
     #text = 'stock_per_location-flowers-location-price_level'
-    targets = ['║Flowers             ║','Insert virtual purchases']
+    targets = ['Date    :','Input purchases']
     #get_window_info(text, targets)
     #a = compare([{'target': 'Inkooporder', 'location': (19, 97)}, {'target': 'Art. info', 'location': (5, 98)},
                  #{'target': 'VBN', 'location': (8, 97)},
                  #{'target': 'Intern partijnummer  : 639545', 'location': (18, 97)}])
     #print(a)
+    get_window_info(targets)
     print(get_window_info(targets))

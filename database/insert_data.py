@@ -1,9 +1,12 @@
 from database.connect import c_engine
 from database import connect
 import pymysql
+from database import get_data
 
-table = 'f2connection_assortment'
-Assortment = connect.get_base_class(c_engine(), table)
+assortment_table = 'f2connection_assortment'
+purchases_table = 'f2connection_purchases'
+Assortment = connect.get_base_class(c_engine(), assortment_table)
+Purchases = connect.get_base_class(c_engine(), purchases_table)
 
 def insert_category(category_code, category_name):
     engine = c_engine()
@@ -54,6 +57,7 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
     )
     session.commit()
 
+
     #'''assortment_code = escape_text(assortment_code)
     #colour = escape_text(colour)
     #category_name = escape_text(category_name)
@@ -67,6 +71,15 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
     #connection.execute(query)
     #connection.close()
 
+def insert_purchase_lots(lots):
+    session = connect.get_session()
+    for lot_num in lots:
+        data = lots[lot_num]
+        exists = get_data.get_purchse_lot(system,data['lot'] )
+        if not exists:
+            #session.add(Purchases(lot=data['lot'], landed_price=data['landed_price'], supplier_code=data['supplier_code']))
+            session.add(Purchases(**data))
+    session.commit()
 
 
 ''' inserts category names and codes into database

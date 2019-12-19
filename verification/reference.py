@@ -130,7 +130,12 @@ VERIFICATION['screens'] = {
                                                            {'target': 'Purchase/distribute', 'location': (5, 55)}],
     'main_menu-purchase-default_insert_virtual_purchase_flowers': [
         {'target': '║Flowers             ║', 'location': (4, 54)},
-        {'target': 'Insert virtual purchases', 'location': (2, 92)}]
+        {'target': 'Insert virtual purchases', 'location': (2, 92)}],
+    'main_menu-purchase-default-input_purchases': [{'target': '║Flowers             ║', 'location': (4, 54)},
+                                                   {'target': 'Input purchases', 'location': (2, 92)}],
+    'main_menu-purchase-default-input_purchases-flowers':
+        [{'target': 'Date    :', 'location': (4, 2)}, {'target': 'Input purchases', 'location': (2, 92)}],
+
 }
 VERIFICATION['navigation'] = {
     'main_menu-maintenance_data': 'Maintenance data',
@@ -147,6 +152,8 @@ VERIFICATION['navigation'] = {
     'main_menu-purchase-default-purchase_distribute_flowers': '',
     'main_menu-purchase-default_insert_virtual_purchase': 'Insert virtual',
     'main_menu-purchase-default_insert_virtual_purchase_flowers': '',
+    'main_menu-purchase-default-input_purchases': 'Input purchases',
+    'main_menu-purchase-default-input_purchases-flowers': '{HOME}{ENTER}',
 }
 
 VERIFICATION['price_list'] = {
