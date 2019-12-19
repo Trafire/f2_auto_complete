@@ -31,8 +31,8 @@ def add_to_startup(executable, file_path=""):
 #add_to_startup(sys.executable)
 
 # log into system
-print("TESTING 3333")
-if __name__ == '__main__' and False:
+
+if __name__ == '__main__':
     username = f2_password['username']
     password = f2_password['password']
     system = 'f2_canada_real'
