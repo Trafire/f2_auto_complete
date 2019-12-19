@@ -11,9 +11,18 @@ from auth.passwords import f2_password
 
 def login(username, password):
     closef2.close()
-    p = r'c:/Program Files (x86)/Connect Internet/'
-    os.chdir(p)
-    os.system('Connect.exe')
+    paths = [
+        {'dir': r'c:/Program Files (x86)/Connect Internet/', 'filename':'Connect.exe'},
+        {'dir': r'c:/Program Files (x86)/Connect2000_Internet/', 'filename':'Connect2000.exe'}
+                   ]
+    for path in paths:
+        try:   
+            os.chdir(path['dir'])
+            os.system(path['filename'])
+            break
+        except:
+            print("not found")
+            print(path)
     while not is_login_dialogue_open():
         time.sleep(.1)
     keyboard.write_text(password)
