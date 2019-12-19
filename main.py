@@ -6,6 +6,7 @@ import stock
 import time
 from database import get_data
 import pyautogui
+import commands
 
 def add_to_startup(executable, file_path=""):
     if file_path == "":
@@ -55,8 +56,9 @@ if __name__ == '__main__':
     index = 0
     while True:
         index += 1
-
-        if index % 30 == 0 :
+        if commands.process_command(system):
+            index -= 1
+        elif index % 30 == 0 :
             closef2.close()
             login.sign_in_toronto(username, password, system, attempts=0)
         elif index > 998 == 0:

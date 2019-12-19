@@ -2,7 +2,7 @@ import sys
 import win32gui, win32con
 import pyautogui
 from interface import window, keyboard
-import time
+import time, os
 
 from verification.reference import VERIFICATION
 
@@ -75,6 +75,9 @@ def close_window(open_window):
 
     win32gui.PostMessage(open_window['handle'], win32con.WM_CLOSE, 0, 0)
 
+def restart_pc():
+    close()
+    os.system("shutdown /r /t 1")
 
 def close():
     for i in range(4):

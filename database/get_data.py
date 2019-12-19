@@ -71,9 +71,6 @@ def remove_null_priced_lots(lots, system):
                     FROM f2connection_pricedlots
                 INNER JOIN f2connection_weeklyprices on f2connection_pricedlots.price_id = f2connection_weeklyprices.id
                     WHERE lot IN {lots} and f2connection_pricedlots.system='{system}' and price IS NOT NULL
-
-                
-                    
                     ;'''
     if len(lots) == 1:
         query = query.replace(f'IN {lots}', f"= '{lots[0]}'")
@@ -141,53 +138,30 @@ def get_purchse_lot(system, lot):
     answer = connection.execute(query).fetchone()
     return answer
 
+def get_command(system):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''SELECT *
+                            FROM f2connection_commands
+                            WHERE status='unstarted'  and system='{system}';'''
+    answer = connection.execute(query).first()
+    if answer:
+        return {
+            'id': answer[0],
+            'command': answer[1],
+            'reference': answer[2],
+            'status': answer[3],
+            'system': answer[4],
+        }
+
 if '__main__' == __name__:
     system = 'f2_canada_real'
     # print(get_lot_price('640619', 'f2_canada_real'))
     year = 2019
     week = 49
-
+    #print(get_command(system))
     # print(check_assortment_price('calsurpE0p', week, year, system))
 
     # lots = ['639690', '641538', '640571']
     # print(check_priced_lots_bulk(lots, system))
     # print(get_articles_codes(system))
-
-    lots = [639733,
-            640638,
-            641584,
-            639734,
-            640639,
-            641585,
-            639761,
-            640666,
-            641612,
-            640663,
-            641609,
-            640664,
-            641610,
-            640665,
-            641611,
-            642014,
-            639767,
-            640672,
-            641618,
-            640673,
-            641619,
-            639769,
-            639729,
-            640634,
-            639730,
-            640635,
-            639731,
-            640636,
-            ]
-    l = []
-    for ls in lots:
-        l.append(str(ls))
-
-    #print(remove_null_priced_lots(l, system))
-    #print(len(set(remove_null_priced_lots(l, system))))
-
-
-#print(get_lot_prices(system, '641580'))
