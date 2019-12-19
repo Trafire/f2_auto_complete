@@ -248,6 +248,9 @@ def price_system():
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
         price_location_quick(system, from_date, to_date, location, price_level)
+        keyboard.command(('alt', 'f2'))
+        keyboard.command('esc')
+        keyboard.command('esc')
 
 
 # get_lots_to_price(location)
