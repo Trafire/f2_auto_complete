@@ -26,7 +26,7 @@ def get_input_purchases(command):
 
 
 
-COMMANDS = {'restart_pc': restart}
+COMMANDS = {'restart_pc': restart, 'get_input_purchases':get_input_purchases}
 system = 'f2_canada_real'
 STATUS = {"started": "started", "unstarted": "unstated", "completed": "completed", "error": "error"}
 
@@ -38,6 +38,7 @@ def process_command(system):
             func = COMMANDS[command['command']]
             if func(command):
                 update_data.update_command_status(command['id'], STATUS['completed'])
+                return True
 
 
 
