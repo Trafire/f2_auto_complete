@@ -5,7 +5,7 @@ from auth.passwords import f2_password
 import stock
 import time
 from database import get_data
-
+import pyautogui
 
 def add_to_startup(executable, file_path=""):
     if file_path == "":
@@ -45,6 +45,9 @@ if __name__ == '__main__':
             # if database isn't open yet will get error
             get_data.check_priced_lots_bulk("12345", "test")
             break
+        except(pyautogui.FailSafeException):
+            print("Corner exit Detected")
+            exit()
         except:
             time.sleep(.5)
             print("Waiting for Database connection")
@@ -62,11 +65,18 @@ if __name__ == '__main__':
         else:
             try:
                 stock.price_system()
+            except(pyautogui.FailSafeException):
+                print("Corner exit Detected")
+                exit()
             except:
                 try:
                     closef2.close()
                     login.sign_in_toronto(username, password, system, attempts=0)
                     stock.price_system()
+
+                except(pyautogui.FailSafeException):
+                    print("Corner exit Detected")
+                    exit()
                 except:
                     closef2.close()
                     os.system("shutdown /r /t 1")
