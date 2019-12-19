@@ -1,5 +1,5 @@
 from database.connect import c_engine
-
+from parse import dates
 
 def get_lot_price(system, lot):
     engine = c_engine()
@@ -153,13 +153,23 @@ def get_command(system):
             'status': answer[3],
             'system': answer[4],
         }
+def get_input_purchase_date_cmd(id):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''SELECT purchase_date
+                                FROM f2connection_cmdpurchasedates
+                                WHERE id={id};'''
+    answer = connection.execute(query).first()
+    if answer:
+        return answer[0]
+
 
 if '__main__' == __name__:
     system = 'f2_canada_real'
     # print(get_lot_price('640619', 'f2_canada_real'))
     year = 2019
     week = 49
-    #print(get_command(system))
+    print(get_input_purchase_date_cmd(1))
     # print(check_assortment_price('calsurpE0p', week, year, system))
 
     # lots = ['639690', '641538', '640571']

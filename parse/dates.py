@@ -7,7 +7,8 @@ def lot_date(date_str):
 def menu_date (date_str):
     return datetime.strptime(date_str, '%d/%m/%y')
 
-
+def database_date(date_str):
+    return datetime.strptime(date_str, '%Y-%m-%d')
 # datetime to string/int
 
 def get_menu_date(date_object):
@@ -18,8 +19,3 @@ def get_week(date_object):
 
 def get_year(date_object):
     return str(date_object.year)
-
-
-
-
-

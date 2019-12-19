@@ -23,6 +23,11 @@ def get_input_purchase_lots(system, purchase_date):
                 attempts += 1
     return lots
 
+def update_purchases(system, purchase_date):
+    data = get_input_purchase_lots(system, purchase_date)
+    insert_data.insert_purchase_lots(data)
+    return True
+
 if __name__ == '__main__':
     system = 'f2_canada_real'
     for d in range(1,31):
