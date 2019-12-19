@@ -1,4 +1,4 @@
 import git
 
-g = git.cmd.Git()
-g.pull()
+repo = git.Repo()
+repo.remotes.origin.pull()
