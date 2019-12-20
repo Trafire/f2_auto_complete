@@ -145,7 +145,7 @@ VERIFICATION['navigation'] = {
     'main_menu-stock': 'Stock',
     'main_menu-stock-stock_per_location': 'Stock per location',
     'main_menu-stock-stock_per_location-edit_stock': '{HOME}',
-    "main_menu-stock-stock_per_location-edit_stock-date-flowers": '{HOME}}',
+    "main_menu-stock-stock_per_location-edit_stock-date-flowers": '{HOME}',
     'main_menu-purchase': "Purchase",
     'main_menu-purchase-default': '{HOME}{ENTER}',
     'main_menu-purchase-default-purchase_distribute': '{HOME}{ENTER}',

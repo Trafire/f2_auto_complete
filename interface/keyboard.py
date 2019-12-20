@@ -21,7 +21,8 @@ def make_mixed_string(data, data_list=[]):
 
 
 def write_mix(data):
-    data_list = make_mixed_string(data)
+    data_list = []
+    data_list = make_mixed_string(data,data_list)
     for d in data_list:
         if '{' in d and '}' in d[d.index('{'):]:
             command(d)
