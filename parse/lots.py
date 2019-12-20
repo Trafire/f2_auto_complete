@@ -81,4 +81,25 @@ def get_lot_info(attempt = 0):
         return lot_data
     return get_lot_info(attempt + 1)
 
+def get_lot_info_purchase(purchase_date, attempt = 0):
+    keyboard.command(('shift', 'f10'))
+    if attempt > 4:
+        return False
+    print(f"attemtpt {attempt}")
+    screen = window.get_window()
+    lot_data = {}
+
+    for reference in lot_reference:
+        lot_data[reference['data_point']] = find_text_end(screen, reference)
+    if not lot_data['assortment_code']:
+        return get_lot_info_purchase(purchase_date,attempt + 1)
+    lot_data['catgeory'] = get_category_name(lot_data['category_num'])
+
+    lot_data['name'] = get_article_name(lot_data['catgeory'])
+    lot_data['landed_price'] = get_landed(lot_data['landed_price'])
+    lot_data['purchase_date'] = purchase_date
+    if check_complete(lot_data):
+        return lot_data
+    return get_lot_info_purchase(purchase_date, attempt + 1)
+
 

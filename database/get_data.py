@@ -39,6 +39,7 @@ def get_category_name(category_code):
     return None
 """
 
+
 def check_priced_lots(lot, system):
     engine = c_engine()
     connection = engine.connect()
@@ -129,6 +130,7 @@ def get_new_lots(system, lots):
         result.append(l[0])
     return [x for x in lots if x not in result]
 
+
 def get_purchse_lot(system, lot):
     engine = c_engine()
     connection = engine.connect()
@@ -137,6 +139,7 @@ def get_purchse_lot(system, lot):
                         WHERE lot='{lot}' and system='{system}';'''
     answer = connection.execute(query).fetchone()
     return answer
+
 
 def get_command(system):
     engine = c_engine()
@@ -153,6 +156,8 @@ def get_command(system):
             'status': answer[3],
             'system': answer[4],
         }
+
+
 def get_input_purchase_date_cmd(id):
     engine = c_engine()
     connection = engine.connect()
@@ -164,12 +169,26 @@ def get_input_purchase_date_cmd(id):
         return answer[0]
 
 
+def get_purchases_assortment_null(system):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''
+    SELECT lot, purchase_date
+        FROM f2connection_purchases
+        WHERE system='{system}' and assortment_code isnull;'''
+    data = connection.execute(query).fetchall()
+    dlist = []
+    for d in data:
+        dlist.append((d[0],d[1]))
+    return dlist
+
+
 if '__main__' == __name__:
     system = 'f2_canada_real'
     # print(get_lot_price('640619', 'f2_canada_real'))
     year = 2019
     week = 49
-    print(get_input_purchase_date_cmd(1))
+    print(get_purchases_assortment_null(system))
     # print(check_assortment_price('calsurpE0p', week, year, system))
 
     # lots = ['639690', '641538', '640571']

@@ -1,7 +1,7 @@
 from navigation import traverse
-from parse import parse, dates
-from interface import keyboard
-from database import insert_data
+from parse import parse, dates, lots
+from interface import keyboard, window
+from database import update_data, get_data, insert_data
 
 
 def get_input_purchase_lots(system, purchase_date):
@@ -23,21 +23,34 @@ def get_input_purchase_lots(system, purchase_date):
                 attempts += 1
     return lots
 
+def get_lot_data(lot, system):
+    window.drag_window()
+    keyboard.command("f7")
+    keyboard.write_text(lot[0])
+    keyboard.enter()
+    data = lots.get_lot_info_purchase(lot[1])
+    keyboard.f12()
+
+    return data
+
+
 def update_purchases(system, purchase_date):
     data = get_input_purchase_lots(system, purchase_date)
-    insert_data.insert_purchase_lots(data)
-    print(data)
+    if data:
+        insert_data.insert_purchase_lots(data)
+        update_data.update_unmatched_purchases()
+        null_lots = get_data.get_purchases_assortment_null(system)
+        for lot in null_lots:
+            data = get_lot_data(lot, system)
+            update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
+
+
+
     return True
 
 if __name__ == '__main__':
     system = 'f2_canada_real'
-    for d in range(1,31):
-        if d > 9:
-            purchase_date = f'{d}/12/19'
-        else:
-            purchase_date = f'0{d}/12/19'
-        purchase_date = dates.menu_date(purchase_date)
-        #data = parse.get_input_purchase_lots()
-        data = get_input_purchase_lots(system, purchase_date)
 
-        insert_data.insert_purchase_lots(data)
+    update_purchases(system, '31/12/19')
+    update_purchases(system, '19/12/19')
+
