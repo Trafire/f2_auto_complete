@@ -41,6 +41,9 @@ def process_command(system):
             if func(command):
                 update_data.update_command_status(command['id'], STATUS['completed'])
                 return True
+            else:
+                update_data.update_command_status(command['id'], STATUS['error'])
+                return True
 
 
 

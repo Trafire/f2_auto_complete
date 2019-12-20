@@ -56,6 +56,7 @@ if __name__ == '__main__':
     index = 0
     while True:
         index += 1
+        print(index)
         if commands.process_command(system):
             index -= 1
         elif index % 30 == 0 :
