@@ -291,7 +291,7 @@ def main_menu_purchase_default_input_purchases_flowers(system, attempts=0):
 
 
 def main_menu_purchase_default_input_purchases_flowers_date(system, purchase_date, attempts=0):
-    if type(purchase_date) == datetime.datetime:
+    if type(purchase_date) in (datetime.datetime, datetime.date):
         purchase_date = dates.get_menu_date(purchase_date)
 
     if main_menu_purchase_default_input_purchases_flowers(system):

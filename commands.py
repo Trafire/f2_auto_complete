@@ -20,6 +20,7 @@ def get_input_purchases(command):
         update_status(command, 'completed')
     else:
         update_status(command, 'error')
+    return True
 
 
 
@@ -32,6 +33,7 @@ STATUS = {"started": "started", "unstarted": "unstated", "completed": "completed
 
 def process_command(system):
     command = get_next_command(system)
+    print(command)
     if command:
         # update_data.update_command_status(command['id'], STATUS['started'])
         if command['command'] in COMMANDS:

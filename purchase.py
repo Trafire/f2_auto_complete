@@ -26,6 +26,7 @@ def get_input_purchase_lots(system, purchase_date):
 def update_purchases(system, purchase_date):
     data = get_input_purchase_lots(system, purchase_date)
     insert_data.insert_purchase_lots(data)
+    print(data)
     return True
 
 if __name__ == '__main__':
@@ -38,4 +39,5 @@ if __name__ == '__main__':
         purchase_date = dates.menu_date(purchase_date)
         #data = parse.get_input_purchase_lots()
         data = get_input_purchase_lots(system, purchase_date)
+
         insert_data.insert_purchase_lots(data)
