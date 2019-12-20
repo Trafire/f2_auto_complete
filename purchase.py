@@ -42,7 +42,8 @@ def update_purchases(system, purchase_date):
         null_lots = get_data.get_purchases_assortment_null(system)
         for lot in null_lots:
             data = get_lot_data(lot, system)
-            update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
+            if data:
+                update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
 
 
 
