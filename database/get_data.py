@@ -86,6 +86,7 @@ def remove_null_priced_lots(lots, system):
 def check_assortment_price(assortment_code, week, year, system):
     engine = c_engine()
     connection = engine.connect()
+    assortment_code = assortment_code.replace("'", "''")
     query = f'''SELECT id, price
                     FROM f2connection_weeklyprices
                     WHERE assortment_code = '{assortment_code}' and system='{system}'

@@ -38,14 +38,19 @@ if __name__ == '__main__':
     password = f2_password['password']
     system = 'f2_canada_real'
     closef2.close()
-    login.sign_in_toronto(username, password, system, attempts=0)
+    try:
+        login.sign_in_toronto(username, password, system, attempts=0)
+    except:
+        closef2.close()
+
+
 
     while True:
         try:
             # if database isn't open yet will get error
             get_data.check_priced_lots_bulk("12345", "test")
             break
-        except(pyautogui.FailSafeException):
+        except pyautogui.FailSafeException:
             print("Corner exit Detected")
             exit()
         except:

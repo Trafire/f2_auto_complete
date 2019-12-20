@@ -1,5 +1,5 @@
 from database.connect import c_engine
-
+import json
 
 def update_landed(lot, system, landed):
     engine = c_engine()
@@ -43,6 +43,7 @@ def update_unmatched_purchases():
 def update_purchases_assortment(system, lot, assortment_code):
     engine = c_engine()
     connection = engine.connect()
+    assortment_code = assortment_code.replace("'", "''")
     query = f'''
             UPDATE f2connection_purchases
                 SET assortment_code = '{assortment_code}'

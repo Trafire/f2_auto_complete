@@ -30,6 +30,7 @@ def insert_lot_price(lot, system, price_id, landed):
 def insert_weekly_price(system, week, year, assortment_code, price):
     engine = c_engine()
     connection = engine.connect()
+    assortment_code = assortment_code.replace("'", "''")
     if price:
         query = f'''INSERT INTO 
                     f2connection_weeklyprices (week, year, assortment_code, price, system) 
@@ -49,7 +50,7 @@ def escape_text(text):
     return pymysql.escape_string(text).replace(':','\:')
 
 def insert_assortment(assortment_code, system, grade, colour, category_code, category_name, name):
-
+    assortment_code = assortment_code.replace("'", "''")
     session = connect.get_session()
     session.add(
     Assortment(assortment_code=assortment_code, system=system, grade=grade, colour=colour,

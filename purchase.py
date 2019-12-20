@@ -51,7 +51,8 @@ def update_purchases(system, purchase_date):
 
 if __name__ == '__main__':
     system = 'f2_canada_real'
-
-    update_purchases(system, '31/12/19')
-    update_purchases(system, '19/12/19')
+    data = get_lot_data('643635', system)
+    update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
+    #update_purchases(system, '31/12/19')
+    #update_purchases(system, '19/12/19')
 
