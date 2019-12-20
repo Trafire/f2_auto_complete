@@ -38,7 +38,6 @@ if __name__ == '__main__':
     password = f2_password['password']
     system = 'f2_canada_real'
     closef2.close()
-    time.sleep(1)
     login.sign_in_toronto(username, password, system, attempts=0)
 
     while True:
@@ -56,15 +55,14 @@ if __name__ == '__main__':
     index = 0
     while True:
         index += 1
-        print(index)
+        if index % 30 == 0:
+            closef2.close()
+            login.sign_in_toronto(username, password, system)
+        if index > 100:
+            closef2.restart_pc()
+
         if commands.process_command(system):
-            index -= 1
-        elif index % 30 == 0 :
-            closef2.close()
-            login.sign_in_toronto(username, password, system, attempts=0)
-        elif index > 998 == 0:
-            closef2.close()
-            os.system("shutdown /r /t 1")
+            pass
         else:
             try:
                 stock.price_system()
