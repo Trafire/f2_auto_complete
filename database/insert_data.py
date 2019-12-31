@@ -8,6 +8,7 @@ purchases_table = 'f2connection_purchases'
 Assortment = connect.get_base_class(c_engine(), assortment_table)
 Purchases = connect.get_base_class(c_engine(), purchases_table)
 
+
 def insert_category(category_code, category_name):
     engine = c_engine()
     connection = engine.connect()
@@ -46,41 +47,65 @@ def insert_weekly_price(system, week, year, assortment_code, price):
     connection.close()
     return a
 
+
 def escape_text(text):
-    return pymysql.escape_string(text).replace(':','\:')
+    return pymysql.escape_string(text).replace(':', '\:')
+
 
 def insert_assortment(assortment_code, system, grade, colour, category_code, category_name, name):
     assortment_code = assortment_code.replace("'", "''")
     session = connect.get_session()
     session.add(
-    Assortment(assortment_code=assortment_code, system=system, grade=grade, colour=colour,
-               category_code_id=category_code, category_name=category_name, name=name)
+        Assortment(assortment_code=assortment_code, system=system, grade=grade, colour=colour,
+                   category_code_id=category_code, category_name=category_name, name=name)
     )
     session.commit()
 
+    # '''assortment_code = escape_text(assortment_code)
+    # colour = escape_text(colour)
+    # category_name = escape_text(category_name)
+    # name = escape_text(name)
+    # engine = c_engine()
 
-    #'''assortment_code = escape_text(assortment_code)
-    #colour = escape_text(colour)
-    #category_name = escape_text(category_name)
-    #name = escape_text(name)
-    #engine = c_engine()
-
-    #connection = engine.connect()
-    #query = f'''INSERT INTO
+    # connection = engine.connect()
+    # query = f'''INSERT INTO
     #                f2connection_assortment (assortment_code, system, grade, colour,  category_code_id, category_name, name)
     #                VALUES ('{assortment_code}', '{system}', '{grade}', '{colour}',  '{category_code}', '{category_name}', '{name}')'''
-    #connection.execute(query)
-    #connection.close()
+    # connection.execute(query)
+    # connection.close()
+
 
 def insert_purchase_lots(lots):
     session = connect.get_session()
     for lot_num in lots:
         data = lots[lot_num]
-        exists = get_data.get_purchse_lot(system,data['lot'] )
+        exists = get_data.get_purchse_lot(system, data['lot'])
         if not exists:
-            #session.add(Purchases(lot=data['lot'], landed_price=data['landed_price'], supplier_code=data['supplier_code']))
+            # session.add(Purchases(lot=data['lot'], landed_price=data['landed_price'], supplier_code=data['supplier_code']))
             session.add(Purchases(**data))
     session.commit()
+
+
+def insert_cmd_purchase_dates(purchase_date):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f"INSERT INTO f2connection_cmdpurchasedates (purchase_date) VALUES ('{purchase_date}')"
+    connection.execute(query)
+    connection.close()
+
+
+def insert_command(command, reference, state, system):
+    engine = c_engine()
+    connection = engine.connect()
+    if reference:
+        query = f'''INSERT INTO f2connection_commands (command, reference, status, system)
+        VALUES ('{command}','{reference}','{state}','{system}')'''
+    else:
+        query = f'''INSERT INTO f2connection_commands (command, reference, status, system)
+        VALUES ('{command}',NULL,'{state}','{system}')'''
+
+    connection.execute(query)
+    connection.close()
 
 
 ''' inserts category names and codes into database

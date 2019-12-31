@@ -239,6 +239,7 @@ def main_menu_purchase_default(system, attempt=0):
     return traverse_menu(main_menu_purchase, keyword, system, attempt=0)
 
 
+
 def main_menu_purchase_default_purchase_distribute(system, attempt=0):
     keyword = 'main_menu-purchase-default-purchase_distribute'
     return traverse_menu(main_menu_purchase_default, keyword, system, attempt=0)
@@ -248,6 +249,11 @@ def main_menu_purchase_default_purchase_distribute_flowers(system, attempt=0):
     keyword = 'main_menu-purchase-default-purchase_distribute_flowers'
     return traverse_menu(main_menu_purchase_default_purchase_distribute, keyword, system, attempt=0)
 
+####### Purchase List #########
+
+
+
+###############################
 
 # to purchase menu
 def main_menu_purchase_default_purchase_distribute_flowers_purchase(system, purchase_date, attempts=0):

@@ -183,13 +183,27 @@ def get_purchases_assortment_null(system):
         dlist.append((d[0],d[1]))
     return dlist
 
+def get_cmdpurchasedates_id(purchase_date):
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''SELECT id
+                                    FROM f2connection_cmdpurchasedates
+                                    WHERE purchase_date='{purchase_date}';'''
+    answer = connection.execute(query).first()
+    if answer:
+        return answer[0]
+
 
 if '__main__' == __name__:
     system = 'f2_canada_real'
     # print(get_lot_price('640619', 'f2_canada_real'))
     year = 2019
     week = 49
-    print(get_purchases_assortment_null(system))
+    #print(get_purchases_assortment_null(system))
+    print(get_cmdpurchasedates_id('2019-12-27'))
+    print(get_cmdpurchasedates_id('2019-5-27'))
+    print(get_cmdpurchasedates_id('2019-11-27'))
+
     # print(check_assortment_price('calsurpE0p', week, year, system))
 
     # lots = ['639690', '641538', '640571']
