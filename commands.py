@@ -89,3 +89,4 @@ if __name__ == "__main__":
         create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
         if index > 25:
             create_command(system, restart, None, STATUS['unstarted'])
+            index = 0
