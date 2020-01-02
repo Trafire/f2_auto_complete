@@ -2,7 +2,7 @@ from navigation import traverse
 from parse import parse, dates, lots
 from interface import keyboard, window
 import time
-#from database import update_data, get_data, insert_data
+from database import update_data, get_data, insert_data
 
 
 def get_input_purchase_lots(system, purchase_date):
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     system = 'f2_canada_real'
 
     data = get_lot_data(['574399', dates.menu_date('03/01/19')], system)
-    #print(data)
+    print(data)
     # update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
     # update_purchases(system, '31/12/19')
     # update_purchases(system, '19/12/19')
