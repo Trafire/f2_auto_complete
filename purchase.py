@@ -26,15 +26,16 @@ def get_input_purchase_lots(system, purchase_date):
     return lots
 
 
-def get_lot_data(lot, purchase_date, system):
+def get_lot_data(lot, system):
     window.drag_window()
-    lot_main = parse.get_input_purchase_lots(system, purchase_date)[lot]
+    lot_number = lot[0]
+    lot_main = parse.get_input_purchase_lots(system, '27/05/19')[lot_number]
     purchase_date = lot_main['purchase_date']
     supplier_code = lot_main['supplier_code']
     keyboard.command("f7")
     keyboard.write_text(lot)
     keyboard.enter()
-    data = lots.get_lot_info_purchase(lot, purchase_date, supplier_code)
+    data = lots.get_lot_info_purchase(lot_number, purchase_date, supplier_code)
     keyboard.f12()
     return data
 
