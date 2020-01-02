@@ -70,6 +70,7 @@ def get_lot_info(attempt = 0):
     lot_data = {}
     for reference in lot_reference:
         lot_data[reference['data_point']] = find_text_end(screen, reference)
+
     if not lot_data['assortment_code']:
         return get_lot_info(attempt + 1)
     lot_data['catgeory'] = get_category_name(lot_data['category_num'])
@@ -81,7 +82,7 @@ def get_lot_info(attempt = 0):
         return lot_data
     return get_lot_info(attempt + 1)
 
-def get_lot_info_purchase(purchase_date, attempt = 0):
+def get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt = 0):
     keyboard.command(('shift', 'f10'))
     if attempt > 4:
         return False
@@ -91,15 +92,20 @@ def get_lot_info_purchase(purchase_date, attempt = 0):
 
     for reference in lot_reference:
         lot_data[reference['data_point']] = find_text_end(screen, reference)
+
     if not lot_data['assortment_code']:
-        return get_lot_info_purchase(purchase_date,attempt + 1)
+        return get_lot_info_purchase(purchase_date, lot_number,attempt + 1)
     lot_data['catgeory'] = get_category_name(lot_data['category_num'])
 
     lot_data['name'] = get_article_name(lot_data['catgeory'])
     lot_data['landed_price'] = get_landed(lot_data['landed_price'])
     lot_data['purchase_date'] = purchase_date
+    lot_data['supplier_code'] = supplier_code
+    if not lot_data['lot_number']:
+        lot_data['lot_number'] = lot_number
+    print(lot_data)
     if check_complete(lot_data):
         return lot_data
-    return get_lot_info_purchase(purchase_date, attempt + 1)
+    return get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt + 1)
 
 

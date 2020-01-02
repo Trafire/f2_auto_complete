@@ -19,3 +19,6 @@ def get_week(date_object):
 
 def get_year(date_object):
     return str(date_object.year)
+
+def get_database_date(date_object):
+    return date_object.strftime('%Y-%m-%d')

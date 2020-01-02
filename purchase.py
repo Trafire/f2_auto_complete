@@ -1,6 +1,8 @@
 from navigation import traverse
 from parse import parse, dates, lots
 from interface import keyboard, window
+
+
 from database import update_data, get_data, insert_data
 
 
@@ -23,14 +25,17 @@ def get_input_purchase_lots(system, purchase_date):
                 attempts += 1
     return lots
 
+
 def get_lot_data(lot, system):
     window.drag_window()
+    lot_main = parse.get_input_purchase_lots(system, '27/05/19')[lot]
+    purchase_date = lot_main['purchase_date']
+    supplier_code = lot_main['supplier_code']
     keyboard.command("f7")
-    keyboard.write_text(lot[0])
+    keyboard.write_text(lot)
     keyboard.enter()
-    data = lots.get_lot_info_purchase(lot[1])
+    data = lots.get_lot_info_purchase(lot, purchase_date, supplier_code)
     keyboard.f12()
-
     return data
 
 
@@ -45,14 +50,16 @@ def update_purchases(system, purchase_date):
             if data:
                 update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
 
-
-
     return True
 
-if __name__ == '__main__':
-    system = 'f2_canada_real'
-    data = get_lot_data('643635', system)
-    update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
-    #update_purchases(system, '31/12/19')
-    #update_purchases(system, '19/12/19')
 
+if __name__ == '__main__':
+    print("start")
+    system = 'f2_canada_real'
+    print(parse.get_input_purchase_lots(system, '27/05/19')['614590'])
+
+    data = get_lot_data('614590', system)
+    print(data)
+    # update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
+    # update_purchases(system, '31/12/19')
+    # update_purchases(system, '19/12/19')

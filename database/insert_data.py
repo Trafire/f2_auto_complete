@@ -107,6 +107,22 @@ def insert_command(command, reference, state, system):
     connection.execute(query)
     connection.close()
 
+def bulk_insert_command(data):
+    engine = c_engine()
+    connection = engine.connect()
+    for d in data:
+        command, reference, state, system = d
+        if reference:
+            query = f'''INSERT INTO f2connection_commands (command, reference, status, system)
+            VALUES ('{command}','{reference}','{state}','{system}')'''
+        else:
+            query = f'''INSERT INTO f2connection_commands (command, reference, status, system)
+            VALUES ('{command}',NULL,'{state}','{system}')'''
+        connection.execute(query)
+    connection.close()
+
+
+
 
 ''' inserts category names and codes into database
 from interface import keyboard, window

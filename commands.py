@@ -1,7 +1,8 @@
 from database import get_data, update_data, insert_data
 import purchase
 import closef2
-
+from parse import dates
+import datetime
 
 def get_next_command(system):
     return get_data.get_command(system)
@@ -38,6 +39,22 @@ def create_command(system, command, reference, status):
         insert_data.insert_command('restart_pc', None, status, system)
 
 
+def two_weeks_purchases(system):
+    today = datetime.datetime.now()
+    days = set()
+    for i in range(7):
+        days.add(today + datetime.timedelta(days=i))
+        days.add(today - datetime.timedelta(days=i))
+    days = list(days)
+    days.sort()
+    for d in days:
+        day = dates.get_database_date(d)
+        print(day)
+        create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
+
+
+
+
 COMMANDS = {'restart_pc': restart, 'get_input_purchases': get_input_purchases}
 system = 'f2_canada_real'
 STATUS = {"started": "started", "unstarted": "unstarted", "completed": "completed", "error": "error"}
@@ -56,3 +73,18 @@ def process_command(system):
             else:
                 update_data.update_command_status(command['id'], STATUS['error'])
                 return True
+
+today = datetime.datetime.now()
+days = set()
+for i in range(340):
+    days.add(today - datetime.timedelta(days=i))
+days = list(days)
+days.sort()
+index = 0
+for d in days:
+    index += 1
+    day = dates.get_database_date(d)
+    print(day)
+    create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
+    if index > 25:
+        create_command(system, restart, None, STATUS['unstarted'])
