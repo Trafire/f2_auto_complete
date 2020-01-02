@@ -74,17 +74,18 @@ def process_command(system):
                 update_data.update_command_status(command['id'], STATUS['error'])
                 return True
 
-today = datetime.datetime.now()
-days = set()
-for i in range(340):
-    days.add(today - datetime.timedelta(days=i))
-days = list(days)
-days.sort()
-index = 0
-for d in days:
-    index += 1
-    day = dates.get_database_date(d)
-    print(day)
-    create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
-    if index > 25:
-        create_command(system, restart, None, STATUS['unstarted'])
+if __name__ == "__main__":
+    today = datetime.datetime.now()
+    days = set()
+    for i in range(340):
+        days.add(today - datetime.timedelta(days=i))
+    days = list(days)
+    days.sort()
+    index = 0
+    for d in days:
+        index += 1
+        day = dates.get_database_date(d)
+        print(day)
+        create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
+        if index > 25:
+            create_command(system, restart, None, STATUS['unstarted'])
