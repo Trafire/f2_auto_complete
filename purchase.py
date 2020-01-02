@@ -2,7 +2,6 @@ from navigation import traverse
 from parse import parse, dates, lots
 from interface import keyboard, window
 
-
 from database import update_data, get_data, insert_data
 
 
