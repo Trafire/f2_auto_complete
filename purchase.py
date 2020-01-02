@@ -1,7 +1,7 @@
 from navigation import traverse
 from parse import parse, dates, lots
 from interface import keyboard, window
-
+import time
 from database import update_data, get_data, insert_data
 
 
@@ -32,7 +32,15 @@ def get_lot_data(lot, system):
     keyboard.command("f7")
     keyboard.write_text(lot_number)
     keyboard.enter()
-    lot_main = parse.get_input_purchase_lots(system, purchase_date)
+    for i in range(5):
+        try:
+            lot_main = parse.get_input_purchase_lots(system, purchase_date)
+            break
+        except:
+            lot_main = False
+            time.sleep(.1)
+    if not lot_main or lot_number not in lot_main:
+        return False
     lot_main =  lot_main[lot_number]
     supplier_code = lot_main['supplier_code']
     data = lots.get_lot_info_purchase(lot_number, purchase_date, supplier_code)
