@@ -47,7 +47,7 @@ def update_purchases(system, purchase_date):
         update_data.update_unmatched_purchases()
         null_lots = get_data.get_purchases_assortment_null(system)
         for lot in null_lots:
-            data = get_lot_data(lot, purchase_date, system)
+            data = get_lot_data(lot, system)
             if data:
                 update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
 
