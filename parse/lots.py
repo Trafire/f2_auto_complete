@@ -106,6 +106,7 @@ def get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt = 0):
     print(lot_data)
     if check_complete(lot_data):
         return lot_data
+
     return get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt + 1)
 
 
