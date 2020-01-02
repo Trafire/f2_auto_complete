@@ -26,9 +26,9 @@ def get_input_purchase_lots(system, purchase_date):
     return lots
 
 
-def get_lot_data(lot, system):
+def get_lot_data(lot, purchase_date, system):
     window.drag_window()
-    lot_main = parse.get_input_purchase_lots(system, '27/05/19')[lot]
+    lot_main = parse.get_input_purchase_lots(system, purchase_date)[lot]
     purchase_date = lot_main['purchase_date']
     supplier_code = lot_main['supplier_code']
     keyboard.command("f7")
@@ -46,7 +46,7 @@ def update_purchases(system, purchase_date):
         update_data.update_unmatched_purchases()
         null_lots = get_data.get_purchases_assortment_null(system)
         for lot in null_lots:
-            data = get_lot_data(lot, system)
+            data = get_lot_data(lot, purchase_date, system)
             if data:
                 update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
 
