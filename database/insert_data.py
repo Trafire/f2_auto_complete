@@ -1,13 +1,8 @@
 from database.connect import c_engine
-from database import connect
+from parse import dates
 import pymysql
 from database import get_data
-#from datetime import datetime
 import datetime
-assortment_table = 'f2connection_assortment'
-purchases_table = 'f2connection_purchases'
-#Assortment = connect.get_base_class(c_engine(), assortment_table)
-#Purchases = connect.get_base_class(c_engine(), purchases_table)
 
 
 def insert_category(category_code, category_name):
@@ -54,13 +49,15 @@ def escape_text(text):
 
 
 def insert_assortment(assortment_code, system, grade, colour, category_code, category_name, name):
-    assortment_code = assortment_code.replace("'", "''")
-    session = connect.get_session()
-    session.add(
-        Assortment(assortment_code=assortment_code, system=system, grade=grade, colour=colour,
-                   category_code_id=category_code, category_name=category_name, name=name)
-    )
-    session.commit()
+
+    engine = c_engine()
+    connection = engine.connect()
+    query = f'''INSERT INTO 
+                        f2connection_assortment(assortment_code, system, grade, colour, category_code_id, category_name, name) 
+                        VALUES ( %s,%s,%s,%s,%s,%s,%s)'''
+    connection.execute(query, (assortment_code, system, grade, colour, category_code, category_name, name))
+    connection.close()
+
 
     # '''assortment_code = escape_text(assortment_code)
     # colour = escape_text(colour)
@@ -77,14 +74,21 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
 
 
 def insert_purchase_lots(lots):
-    session = connect.get_session()
+
     for lot_num in lots:
         data = lots[lot_num]
         exists = get_data.get_purchse_lot(system, data['lot'])
+        print(data)
+        {'system': 'f2_canada_real', 'purchase_date': '14/01/20', 'lot': '646490', 'landed_price': '2.88',
+         'supplier_code': 'CASELM'}
         if not exists:
-            # session.add(Purchases(lot=data['lot'], landed_price=data['landed_price'], supplier_code=data['supplier_code']))
-            session.add(Purchases(**data))
-    session.commit()
+            engine = c_engine()
+            connection = engine.connect()
+            query = '''INSERT INTO f2connection_purchases (system, purchase_date, lot,landed_price,supplier_code) VALUES (%s,%s,%s,%s,%s)'''
+            connection.execute(query,(data['system'],dates.menu_date(data['purchase_date']),data['lot'], data['landed_price'], data['supplier_code']))
+            connection.close()
+
+
 
 
 def insert_cmd_purchase_dates(purchase_date):
@@ -141,6 +145,19 @@ def insert_open_lines(system, data_list):
         connection.execute(query, (data['variety'],data['colour'], data['comment']))
     connection.close()
 
+def insert_last_done(system,action, reference):
+    engine = c_engine()
+    connection = engine.connect()
+    time_done = datetime.datetime.now(datetime.timezone.utc)
+    query = ''' 
+    INSERT into f2connection_lastdone (system, action, time_done, reference)
+    VALUES
+        (%s, %s,%s,%s)
+    '''
+    connection.execute(query, (system, action, time_done, reference))
+
+
+
 
 ''' inserts category names and codes into database
 from interface import keyboard, window
@@ -192,7 +209,8 @@ def update_categories():
 '''
 # return bool(answer[0])
 system = 'f2_canada_real'
-
+#insert_assortment('ealnicep0', 'f2_canada_real', '80', 'PID', '3251',  ' Alstro SA', 'Nice')
+#insert_week_done(system,2020, 3)
 #data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}
 #insert_open_lines(system, [data])
 #data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy 'Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}

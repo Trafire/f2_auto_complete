@@ -5,7 +5,7 @@ import datetime, time
 from datetime import date
 from parse import dates
 from interface import keyboard, window
-from database import insert_data, delete_data
+from database import insert_data, delete_data, get_data, update_data
 
 
 def get_date_sunday(year, week):
@@ -58,7 +58,50 @@ def get_order_week(year, week):
     print("Week %i total lines = %i" % (week, len(product)))
     return product
 
+def is_report_due(system, year, week):
+    weeks = weeks_to_report(year,week)
+    time = get_time_since_last_report(system, year, week)
+    if not time:
+        return True
+    hours = double(weeks, .5)
+    if time > datetime.timedelta(hours=hours):
+        return True
+    return False
 
+
+def double(i, num):
+	if i <= 0:
+		return num
+	else:
+		return double(i-1, num * 2)
+
+def weeks_to_report(year,week):
+    now = datetime.datetime.now()
+    cur_week = dates.get_week(now)
+    cur_year = int(dates.get_year(now))
+    week = week - cur_week
+    if cur_year < year:
+        year = year - cur_year
+        week += year * 52
+    return week
+
+
+
+def get_time_since_last_report(system, year, week):
+    reference = f"{year},{week}"
+    action = "openorders"
+    report_time = get_data.get_time_since_report(system, action, reference)
+    if report_time:
+        return datetime.datetime.now(datetime.timezone.utc) - report_time
+
+
+def update_time_since_last_report(system, year, week):
+    reference = f"{year},{week}"
+    action = "openorders"
+    if get_data.get_time_since_report(system, action, reference):
+        update_data.update_last_done(system, action, reference)
+    else:
+        insert_data.insert_last_done(system,action, reference)
 
 def clean_purchase_report_data(data):
     clean = {}
@@ -86,18 +129,24 @@ def update_week(system, year, week):
     for d in week_dates:
         delete_data.delete_open_lines(system,d)
     insert_data.insert_open_lines(system, clean)
+    update_time_since_last_report(system, year, week)
+    return True
 
+'''
 
-system = 'f2_canada_real'
 week = 4
 year = 2020
 update_week(system, year, week)
 
-'''
+
 
 go_to_puchase_list()
 data = get_order_week(2020, 4)
 products = []
 '''
-
-clean = []
+system = 'f2_canada_real'
+#update_time_since_last_report(system, 2020, 4)
+#print(get_time_since_last_report(system, 2020, 4))
+year = 2020
+week = 4
+#print(is_report_due(system, year, week))

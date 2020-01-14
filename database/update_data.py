@@ -1,5 +1,7 @@
 from database.connect import c_engine
 import json
+import datetime
+
 
 def update_landed(lot, system, landed):
     engine = c_engine()
@@ -23,8 +25,6 @@ def update_command_status(id, status):
 
     connection.execute(query)
     connection.close()
-
-
 
 
 def update_unmatched_purchases():
@@ -52,3 +52,14 @@ def update_purchases_assortment(system, lot, assortment_code):
     connection.execute(query)
     connection.close()
 
+
+def update_last_done(system, action, reference):
+    engine = c_engine()
+    connection = engine.connect()
+    time_done = datetime.datetime.now(datetime.timezone.utc)
+    query = f'''
+    UPDATE f2connection_lastdone
+    SET time_done=%s
+    WHERE system=%s and action=%s and reference=%s
+    '''
+    connection.execute(query, (time_done, system, action, reference))

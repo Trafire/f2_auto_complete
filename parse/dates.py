@@ -31,7 +31,7 @@ def get_week(date_object):
     return date_object.isocalendar()[:2][1]
 
 def get_year(date_object):
-    return str(date_object.year)
+    return int(date_object.year)
 
 def get_database_date(date_object):
     return date_object.strftime('%Y-%m-%d')

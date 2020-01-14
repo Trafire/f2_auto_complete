@@ -1,5 +1,5 @@
 from database import get_data, update_data, insert_data
-import purchase
+import purchase, reports
 import closef2
 from parse import dates
 import datetime
@@ -15,6 +15,16 @@ def update_status(command, status):
 def restart(command):
     update_data.update_command_status(command['id'], STATUS['completed'])
     closef2.restart_pc()
+
+def get_order_lines(command):
+    print(command)
+    update_status(command, "started")
+    reference = int(command['reference'])
+    date = datetime.datetime.now() + datetime.timedelta(days= reference)
+    if reports.update_week(system, dates.get_year(date), dates.get_week(date)):
+        update_status(command, 'completed')
+
+
 
 
 def get_input_purchases(command):
@@ -55,7 +65,7 @@ def two_weeks_purchases(system):
 
 
 
-COMMANDS = {'restart_pc': restart, 'get_input_purchases': get_input_purchases}
+COMMANDS = {'restart_pc': restart, 'get_input_purchases': get_input_purchases, 'get_open_lines':get_order_lines}
 system = 'f2_canada_real'
 STATUS = {"started": "started", "unstarted": "unstarted", "completed": "completed", "error": "error"}
 
@@ -76,6 +86,7 @@ def process_command(system):
 
 
 if __name__ == "__main__":
+    '''
     today = datetime.datetime.now()
     days = set()
     for i in range(20):
@@ -91,3 +102,6 @@ if __name__ == "__main__":
         if index > 25:
             create_command(system, restart, None, STATUS['unstarted'])
             index = 0
+            '''
+    command = {'id': 1514, 'command': 'get_open_lines', 'reference': 1, 'status': 'unstarted', 'system': 'f2_canada_real'}
+    get_order_lines(command)

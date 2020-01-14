@@ -69,8 +69,9 @@ if __name__ == '__main__':
     print("start")
     system = 'f2_canada_real'
 
-    data = get_lot_data(['574399', dates.menu_date('03/01/19')], system)
-    print(data)
+    #data = get_lot_data(['574399', dates.menu_date('03/01/19')], system)
+    #print(data)
     # update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
-    # update_purchases(system, '31/12/19')
+    update_purchases(system, '14/01/20')
+
     # update_purchases(system, '19/12/19')
