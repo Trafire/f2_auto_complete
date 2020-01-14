@@ -74,11 +74,12 @@ def process_command(system):
                 update_data.update_command_status(command['id'], STATUS['error'])
                 return True
 
+
 if __name__ == "__main__":
     today = datetime.datetime.now()
     days = set()
-    for i in range(340):
-        days.add(today - datetime.timedelta(days=i))
+    for i in range(20):
+        days.add(today + datetime.timedelta(days=30 + i))
     days = list(days)
     days.sort()
     index = 0

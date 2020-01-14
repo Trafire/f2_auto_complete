@@ -2,11 +2,12 @@ from database.connect import c_engine
 from database import connect
 import pymysql
 from database import get_data
-
+#from datetime import datetime
+import datetime
 assortment_table = 'f2connection_assortment'
 purchases_table = 'f2connection_purchases'
-Assortment = connect.get_base_class(c_engine(), assortment_table)
-Purchases = connect.get_base_class(c_engine(), purchases_table)
+#Assortment = connect.get_base_class(c_engine(), assortment_table)
+#Purchases = connect.get_base_class(c_engine(), purchases_table)
 
 
 def insert_category(category_code, category_name):
@@ -107,6 +108,7 @@ def insert_command(command, reference, state, system):
     connection.execute(query)
     connection.close()
 
+
 def bulk_insert_command(data):
     engine = c_engine()
     connection = engine.connect()
@@ -122,6 +124,22 @@ def bulk_insert_command(data):
     connection.close()
 
 
+
+def insert_open_lines(system, data_list):
+    engine = c_engine()
+    connection = engine.connect()
+
+    for data in data_list:
+        query = f''' 
+        INSERT INTO f2connection_openorders (system, category, variety, colour, client_code, order_date, 
+        quantity, supplier_code, standing, comment, updated)  
+        VALUES 
+        ('{system}', '{data['category']}', %s, %s, '{data['client_code']}', '{data['order_date']}', '{data['quantity']}', 
+        '{data['supplier_code']}', '{data['standing']}',  %s, '{datetime.datetime.now()}')
+        
+        '''
+        connection.execute(query, (data['variety'],data['colour'], data['comment']))
+    connection.close()
 
 
 ''' inserts category names and codes into database
@@ -174,5 +192,10 @@ def update_categories():
 '''
 # return bool(answer[0])
 system = 'f2_canada_real'
+
+#data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}
+#insert_open_lines(system, [data])
+#data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy 'Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}
+#insert_open_lines(system, [data])
 # insert_lot_price(641632, system, 2)
 # print(insert_weekly_price(system, 52, 2019, 'appl6',  .59))
