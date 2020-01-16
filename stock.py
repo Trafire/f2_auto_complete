@@ -8,7 +8,7 @@ import pricing
 from database import insert_data
 #import sqlalchemy
 import closef2
-
+import time
 
 SHIPMENT_LOCATIONS = ['ec', 'nl', 'col', 'on']
 SELLING_LOCATIONS = ['sale']
@@ -49,14 +49,17 @@ def change_price_level(system, location, price_level):
         return f2_page.verify_per_location_price_level(location, price_level)
 
 
-def go_to_lot(system, location, lot):
+def go_to_lot(system, location, lot, attempt=0):
     if f2_page.verify_per_location(location) and f2.verify_system(system):
+        time.sleep(attempt * .05)
         keyboard.command('F7')
         keyboard.write_text(lot)
         keyboard.enter(2)
         keyboard.command(('shift', 'F10'))
         found = f2_page.verify_lot_info(lot)
         keyboard.command('f12')
+        if not found and attempt < 5:
+            found = go_to_lot(system, location, lot, attempt= attempt+ 1)
         return found
 
 
