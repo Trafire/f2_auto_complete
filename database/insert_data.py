@@ -85,7 +85,7 @@ def insert_purchase_lots(lots):
             engine = c_engine()
             connection = engine.connect()
             query = '''INSERT INTO f2connection_purchases (system, purchase_date, lot,landed_price,supplier_code) VALUES (%s,%s,%s,%s,%s)'''
-            connection.execute(query,(data['system'],dates.menu_date(data['purchase_date']),data['lot'], data['landed_price'], data['supplier_code']))
+            connection.execute(query,(data['system'],dates.get_database_date(data['purchase_date']),data['lot'], data['landed_price'], data['supplier_code']))
             connection.close()
 
 
@@ -217,3 +217,5 @@ system = 'f2_canada_real'
 #insert_open_lines(system, [data])
 # insert_lot_price(641632, system, 2)
 # print(insert_weekly_price(system, 52, 2019, 'appl6',  .59))
+
+

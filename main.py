@@ -59,43 +59,54 @@ if __name__ == '__main__':
             print("Waiting for Database connection")
 
     index = 0
+    error_count = 0
     while True:
+        try:
+            # if there are more than 5 errors in a row restart computer
+            if error_count > 5:
+                closef2.restart_pc()
 
 
+            index += 1
+            if index % 30 == 0:
+                closef2.close()
+                login.sign_in_toronto(username, password, system)
+            if index > 100:
+                closef2.restart_pc()
 
-        index += 1
-        if index % 30 == 0:
-            closef2.close()
-            login.sign_in_toronto(username, password, system)
-        if index > 100:
-            closef2.restart_pc()
+            if commands.process_command(system):
+                pass
+            else:
+                today = datetime.datetime.now()
+                for i in range(12):
+                    day = today + datetime.timedelta(weeks=i)
+                    year = dates.get_year(day)
+                    week = dates.get_week(day)
 
-        if commands.process_command(system):
-            pass
-        else:
-            today = datetime.datetime.now()
-            for i in range(12):
-                day = today + datetime.timedelta(weeks=i)
-                year = dates.get_year(day)
-                week = dates.get_week(day)
-
-                if reports.is_report_due(system, year, week):
-                    reports.update_week(system, year, week)
-            try:
-
-                stock.price_system()
-            except(pyautogui.FailSafeException):
-                print("Corner exit Detected")
-                exit()
-            except:
+                    if reports.is_report_due(system, year, week):
+                        reports.update_week(system, year, week)
                 try:
-                    closef2.close()
-                    login.sign_in_toronto(username, password, system, attempts=0)
-                    stock.price_system()
 
+                    stock.price_system()
                 except(pyautogui.FailSafeException):
                     print("Corner exit Detected")
                     exit()
                 except:
-                    closef2.close()
-                    os.system("shutdown /r /t 1")
+                    try:
+                        closef2.close()
+                        login.sign_in_toronto(username, password, system, attempts=0)
+                        stock.price_system()
+
+                    except(pyautogui.FailSafeException):
+                        print("Corner exit Detected")
+                        exit()
+                    except:
+                        closef2.close()
+                        os.system("shutdown /r /t 1")
+                error_count = 0
+        except:
+            # on error close f2 and relogin
+            error_count += 1
+            print(f"error count: {error_count}")
+            closef2.close()
+            login.sign_in_toronto(username, password, system)

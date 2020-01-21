@@ -13,6 +13,7 @@ def get_time_since_report(system, action, reference):
     answer = connection.execute(query, (system, action, reference)).fetchone()
     if answer:
         return answer[0]
+    return False
 
 
 def get_lot_price(system, lot):

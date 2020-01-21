@@ -103,5 +103,6 @@ if __name__ == "__main__":
             create_command(system, restart, None, STATUS['unstarted'])
             index = 0
             '''
-    command = {'id': 1514, 'command': 'get_open_lines', 'reference': 1, 'status': 'unstarted', 'system': 'f2_canada_real'}
-    get_order_lines(command)
+    #command = {'id': 1514, 'command': 'get_open_lines', 'reference': 1, 'status': 'unstarted', 'system': 'f2_canada_real'}
+    #get_order_lines(command)
+    two_weeks_purchases(system)
