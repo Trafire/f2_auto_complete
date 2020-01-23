@@ -8,7 +8,7 @@ def verify_contains(strings, attempts):
     def tries(strings):
         screen = window.get_window()
         for s in strings:
-            if s not in screen:
+            if not screen or s not in screen:
                 return False
         return True
 
