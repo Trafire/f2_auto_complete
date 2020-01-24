@@ -135,14 +135,14 @@ def insert_open_lines(system, data_list):
 
     for data in data_list:
         query = f''' 
-        INSERT INTO f2connection_openorders (system, category, variety, colour, client_code, order_date, 
+        INSERT INTO f2connection_openorders (system, category, variety, colour,grade, client_code, order_date, 
         quantity, supplier_code, standing, comment, updated)  
         VALUES 
-        ('{system}', '{data['category']}', %s, %s, '{data['client_code']}', '{data['order_date']}', '{data['quantity']}', 
+        ('{system}', %s, %s, %s, %s,%s, '{data['order_date']}', '{data['quantity']}', 
         '{data['supplier_code']}', '{data['standing']}',  %s, '{datetime.datetime.now()}')
         
         '''
-        connection.execute(query, (data['variety'],data['colour'], data['comment']))
+        connection.execute(query, (data['category'], data['variety'],data['colour'],data['grade'],data['client_code'], data['comment']))
     connection.close()
 
 def insert_last_done(system,action, reference):
