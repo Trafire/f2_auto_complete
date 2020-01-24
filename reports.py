@@ -147,7 +147,7 @@ products = []
 system = 'f2_canada_real'
 #update_time_since_last_report(system, 2020, 4)
 #print(get_time_since_last_report(system, 2020, 4))
-year = 2020
-week = 4
-update_week(system, year, week)
+#year = 2020
+#week = 4
+#update_week(system, year, week)
 #print(is_report_due(system, year, week))

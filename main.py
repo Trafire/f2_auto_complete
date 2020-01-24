@@ -104,9 +104,15 @@ if __name__ == '__main__':
                         closef2.close()
                         os.system("shutdown /r /t 1")
                 error_count = 0
+        except pyautogui.FailSafeException:
+            print("Corner exit Detected")
+            exit()
         except:
             # on error close f2 and relogin
             error_count += 1
             print(f"error count: {error_count}")
-            closef2.close()
-            login.sign_in_toronto(username, password, system)
+            try:
+                closef2.close()
+                login.sign_in_toronto(username, password, system)
+            except:
+                closef2.restart_pc()
