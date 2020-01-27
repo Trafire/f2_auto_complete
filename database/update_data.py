@@ -37,15 +37,14 @@ def update_unmatched_purchases():
     connection.close()
 
 
-def update_purchases_assortment(system, lot, assortment_code):
+def update_purchases_assortment(system, lot, assortment_code, supplier):
     connection = engine.connect()
-    assortment_code = assortment_code.replace("'", "''")
+
     query = f'''
             UPDATE f2connection_purchases
-                SET assortment_code = '{assortment_code}'
-                WHERE lot='{lot}' and system='{system}';'''
-    print(query)
-    connection.execute(query)
+                SET assortment_code = %s, supplier_code = %s
+                WHERE lot=%s and system=%s;'''
+    connection.execute(query,(assortment_code, supplier, lot,system))
     connection.close()
 
 

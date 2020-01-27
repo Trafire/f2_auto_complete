@@ -73,9 +73,8 @@ def insert_purchase_lots(lots):
     for lot_num in lots:
         data = lots[lot_num]
         exists = get_data.get_purchse_lot(system, data['lot'])
-        print(data)
-        {'system': 'f2_canada_real', 'purchase_date': '14/01/20', 'lot': '646490', 'landed_price': '2.88',
-         'supplier_code': 'CASELM'}
+        print(76, data)
+
         if not exists:
             engine = c_engine()
             connection = engine.connect()

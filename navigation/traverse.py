@@ -320,4 +320,4 @@ if __name__ == '__main__':
     to_date = '30/11/45'
     price_level = 1
     location = 'on'
-    main_menu_stock_stock_per_location(system)
+    print(stock_per_location_location(system, from_date, to_date, location, attempt=0))

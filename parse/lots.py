@@ -55,8 +55,8 @@ def find_text_end(screen, reference):
 
 def check_complete(lot_data):
     for key in lot_data:
-        if not lot_data[key]:
-            print(lot_data[key])
+        if key != 'colour' and not lot_data[key]:
+            print(59, "missing:", key)
             return False
     return True
 
@@ -83,30 +83,32 @@ def get_lot_info(attempt = 0):
     return get_lot_info(attempt + 1)
 
 def get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt = 0):
+    print(86, supplier_code)
     keyboard.command(('shift', 'f10'))
     if attempt > 4:
         return False
-    print(f"attemtpt {attempt}")
+    print(89, f"attemtpt {attempt}")
     screen = window.get_window()
     lot_data = {}
 
     for reference in lot_reference:
         lot_data[reference['data_point']] = find_text_end(screen, reference)
-
+    print(96, lot_data)
     if not lot_data['assortment_code']:
-        return get_lot_info_purchase(purchase_date, lot_number,attempt + 1)
+        return get_lot_info_purchase(purchase_date, lot_number,supplier_code, attempt + 1)
     lot_data['catgeory'] = get_category_name(lot_data['category_num'])
 
     lot_data['name'] = get_article_name(lot_data['catgeory'])
     lot_data['landed_price'] = get_landed(lot_data['landed_price'])
     lot_data['purchase_date'] = purchase_date
     lot_data['supplier_code'] = supplier_code
+    print(105, supplier_code)
     if not lot_data['lot_number']:
         lot_data['lot_number'] = lot_number
     print(lot_data)
     if check_complete(lot_data):
+        print('complete')
         return lot_data
-
     return get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt + 1)
 
 

@@ -78,8 +78,9 @@ def get_stock_lots():
             data[lot] = (rdata)
     return data
 
-
+import time
 def get_input_purchase_lots(system, purchase_date):
+    time.sleep(.1)
     uscreen = window.get_window()
     screen = process_scene(uscreen)
     data = {}
@@ -97,3 +98,9 @@ def get_input_purchase_lots(system, purchase_date):
         if rdata['lot'].isdigit():
             data[lot] = (rdata)
     return data
+if __name__ == '__main__':
+    system = 'f2_canada_real'
+    import dates
+    data = get_input_purchase_lots(system, dates.menu_date('27/01/20'))
+    for i in data:
+        print(i, data[i])
