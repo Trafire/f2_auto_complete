@@ -15,6 +15,17 @@ def verify_per_location(location):
         w['target'] = swap_values(swaps, w['target'])
     return f2.verify(window_data, 50)
 
+def verify_per_location_virtual(location):
+    keyword = 'virtual_stock_per_location-flowers-location'
+    window_data = copy.deepcopy(VERIFICATION['screens'][keyword])
+    swaps = {
+        '{location}': location,
+    }
+
+    for w in window_data:
+        w['target'] = swap_values(swaps, w['target'])
+    return f2.verify(window_data, 50)
+
 
 def verify_per_location_price_level(location, level, attempt=0):
     if attempt > 50:
@@ -41,9 +52,13 @@ def verify_per_location_price_level(location, level, attempt=0):
     return verify_per_location(location) and f2.verify(window_data, 50)
 
 
-def verify_lot_info(lot_number):
+def verify_lot_info(lot_number, virtual=False):
+    if virtual:
+        screen = 'virtual_lot_info'
+    else:
+        screen = 'lot_info'
 
-    window_data = copy.deepcopy(VERIFICATION['screens'] ['lot_info'])
+    window_data = copy.deepcopy(VERIFICATION['screens'] [screen])
     swaps = {
         '{lot_number}': lot_number,
     }

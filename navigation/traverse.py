@@ -63,7 +63,16 @@ def main_menu(system):
 ############## STOCK COMMANDS ######################
 def main_menu_stock(system, attempt=0):
     return traverse_menu(main_menu, 'main_menu-stock', system, attempt=0)
+### virtual
 
+def main_menu_stock_virtual_stock_location(system, attempt=0):
+    return traverse_menu(main_menu_stock, 'main_menu-stock-virtual-stock-location', system, attempt=0)
+
+def main_menu_stock_virtual_stock_location_edit_stock(system, attempt=0):
+    return traverse_menu(main_menu_stock_virtual_stock_location, 'main_menu-stock-virtual-stock-location-edit_stock', system, attempt=0)
+
+
+#### end virtual
 
 def main_menu_stock_stock_per_location(system, attempt=0):
     keyword = 'main_menu-stock-stock_per_location'
@@ -75,7 +84,7 @@ def main_menu_stock_stock_per_location_edit_stock(system, attempt=0):
     return traverse_menu(main_menu_stock_stock_per_location, keyword, system, attempt=0)
 
 
-def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0):
+def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0, virtual=False):
     if attempt > 10:
         return False
 
@@ -85,7 +94,12 @@ def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_dat
     if type(to_date) == datetime.datetime:
         to_date = dates.get_menu_date(to_date)
 
-    if main_menu_stock_stock_per_location_edit_stock(system, attempt=0):
+    if virtual:
+        menu = main_menu_stock_virtual_stock_location_edit_stock
+    else:
+        menu = main_menu_stock_stock_per_location_edit_stock
+
+    if menu(system, attempt=0):
         keyboard.write_text(from_date)
         keyboard.enter()
         keyboard.write_text(to_date)
@@ -105,7 +119,7 @@ def main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_dat
     return False
 
 
-def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0):
+def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=False):
     if attempt > 10:
         return False
 
@@ -115,7 +129,8 @@ def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date
     if type(to_date) == datetime.datetime:
         to_date = dates.get_menu_date(to_date)
 
-    if main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0):
+
+    if main_menu_stock_stock_per_location_edit_stock_date(system, from_date, to_date, attempt=0, virtual=virtual):
         keyword = "main_menu-stock-stock_per_location-edit_stock-date-flowers"
         window_data = VERIFICATION['screens'][keyword]
         cmd = VERIFICATION['navigation'][keyword]
@@ -128,21 +143,30 @@ def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date
     return False
 
 
-def get_actual_stock_locations(system, from_date, to_date, attempt=0):
+def get_actual_stock_locations(system, from_date, to_date, attempt=0, virtual=False):
     if attempt > 10:
         return False
-    if main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0):
+    if main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=virtual):
+        locations = parse.get_stock_locations()
+        if len(locations) == 0:
+            return get_actual_stock_locations(system, from_date, to_date, attempt + 1, virtual=virtual)
+        return locations
+    return False
+
+def get_virtual_stock_locations(system, from_date, to_date, attempt=0):
+    if attempt > 10:
+        return False
+    if main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=True):
         locations = parse.get_stock_locations()
         if len(locations) == 0:
             return get_actual_stock_locations(system, from_date, to_date, attempt + 1)
         return locations
     return False
 
-
-def stock_per_location_location(system, from_date, to_date, location, attempt=0):
+def stock_per_location_location(system, from_date, to_date, location, attempt=0, virtual=False):
     if attempt > 10:
         return False
-    if location in get_actual_stock_locations(system, from_date, to_date):
+    if location in get_actual_stock_locations(system, from_date, to_date, virtual=virtual):
         keyword = 'stock_per_location-flowers-location'
         keyboard.write_text(location)
         keyboard.enter(2)
@@ -154,9 +178,11 @@ def stock_per_location_location(system, from_date, to_date, location, attempt=0)
             w['target'] = swap_values(swaps, w['target'])
         print(f"location is {location}: {window_data}")
         if not f2.verify(window_data, 100):
-            return stock_per_location_location(system, from_date, to_date, location, attempt + 1)
+            return stock_per_location_location(system, from_date, to_date, location, attempt + 1, virtual=virtual)
         return True
     return False
+
+
 
 
 def swap_values(swaps, text):
@@ -320,4 +346,6 @@ if __name__ == '__main__':
     to_date = '30/11/45'
     price_level = 1
     location = 'on'
-    print(stock_per_location_location(system, from_date, to_date, location, attempt=0))
+    #print(stock_per_location_location(system, from_date, to_date, location, attempt=0))
+    #main_menu_stock_virtual_stock_location_edit_stock(system, attempt=0)
+    main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=False)

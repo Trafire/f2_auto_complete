@@ -80,6 +80,11 @@ VERIFICATION['screens'] = {
     ],
     'main_menu-stock': [{'target': 'Stock (actual)', 'location': (5, 29)},
                         {'target': 'Edit stock', 'location': (5, 54)}],
+
+    'main_menu-stock-virtual-stock-location': [{'target': 'Stock (actual)', 'location': (5, 29)},
+                                               {'target': 'Edit stock', 'location': (5, 54)}],
+    'main_menu-stock-virtual-stock-location-edit_stock': [{'target': 'Edit stock', 'location': (2, 92)},
+                                                          {'target': 'Til:', 'location': (4, 18)}],
     "main_menu-stock-stock_per_location": [{'target': '   Stock location  ', 'location': (2, 89)},
                                            {'target': 'Edit stock per group', 'location': (6, 54)}],
     "main_menu-stock-stock_per_location-edit_stock": [{'target': 'Edit stock', 'location': (2, 92)},
@@ -93,8 +98,12 @@ VERIFICATION['screens'] = {
     "stock_per_location-flowers-location": [{'target': 'Edit stock Flowers', 'location': (2, 92)},
                                             {'target': 'Location: {location}', 'location': (33, 41)},
                                             {'target': 'Description', 'location': (5, 15)}],
+    'virtual_stock_per_location-flowers-location': [{'target': 'Edit stock Flowers', 'location': (2, 92)},
+                                                    {'target': 'Description', 'location': (5, 16)},
+                                                    {'target': 'Pack.:', 'location': (33, 69)}],
     "stock_per_location-flowers-location-price_level": [{'target': 'Pricegroup:    {level}', 'location': (4, 59)}],
     "lot_info": [{'target': 'Intern partijnummer  : {lot_number}', 'location': (18, 97)}],
+    "virtual_lot_info": [{'target': 'Intern partijnummer  : {lot_number}', 'location': (17, 97)}],
 
     'main_menu-purchase': [{'target': 'Purchase', 'location': (2, 92)}, {'target': 'Purchase', 'location': (5, 55)},
                            {'target': 'Purchase', 'location': (6, 4)}, {'target': 'Purchase', 'location': (7, 29)},
@@ -154,6 +163,8 @@ VERIFICATION['navigation'] = {
     'main_menu-purchase-default_insert_virtual_purchase_flowers': '',
     'main_menu-purchase-default-input_purchases': 'Input purchases',
     'main_menu-purchase-default-input_purchases-flowers': '{HOME}{ENTER}',
+    'main_menu-stock-virtual-stock-location': 'Virtual stock location',
+    'main_menu-stock-virtual-stock-location-edit_stock': '{HOME}{ENTER}',
 }
 
 VERIFICATION['price_list'] = {

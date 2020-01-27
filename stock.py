@@ -10,7 +10,8 @@ from database import insert_data
 import closef2
 import time
 
-SHIPMENT_LOCATIONS = ['ec', 'nl', 'col', 'on']
+SHIPMENT_LOCATIONS = ['on','sale','ec', 'nl', 'col' ]
+#SHIPMENT_LOCATIONS = ['on']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
 system = 'f2_canada_real'
@@ -29,10 +30,10 @@ def price_item(price):
         return False
 
 
-def price_lot(system, lot, location, price):
+def price_lot(system, lot, location, price, virtual=False):
     # window.drag_window()
     keyboard.command(('shift', 'F10'))
-    if f2_page.verify_lot_info(lot):
+    if f2_page.verify_lot_info(lot, virtual=virtual):
         keyboard.f12()
         if change_price_level(system, location, 0):
             keyboard.command('f2')
@@ -48,6 +49,19 @@ def change_price_level(system, location, price_level):
         keyboard.enter()
         return f2_page.verify_per_location_price_level(location, price_level)
 
+def go_to_lot_virtual(system, location, lot, attempt=0):
+
+    if f2_page.verify_per_location_virtual(location) and f2.verify_system(system):
+        time.sleep(attempt * .05)
+        keyboard.command('F7')
+        keyboard.write_text(lot)
+        keyboard.enter(2)
+        keyboard.command(('shift', 'F10'))
+        found = f2_page.verify_lot_info(lot, virtual=True)
+        keyboard.command('f12')
+        if not found and attempt < 5:
+            found = go_to_lot(system, location, lot, attempt= attempt+ 1)
+        return found
 
 def go_to_lot(system, location, lot, attempt=0):
     if f2_page.verify_per_location(location) and f2.verify_system(system):
@@ -63,8 +77,8 @@ def go_to_lot(system, location, lot, attempt=0):
         return found
 
 
-def get_stock_lots(system, from_date, to_date, location, price_level):
-    if traverse.stock_per_location_location(system, from_date, to_date, location):
+def get_stock_lots(system, from_date, to_date, location, price_level, virtual=False):
+    if traverse.stock_per_location_location(system, from_date, to_date, location,virtual=virtual):
         if change_price_level(system, location, price_level):
             old_screen = ''
             stock = {}
@@ -114,13 +128,20 @@ def get_lots_to_price_quick(location, from_date='00/00/00', to_date='31/12/30'):
     return to_price
 
 
-def get_stock_information(system, location, lot):
+def get_stock_information(system, location, lot, virtual=False):
     print(f"going to lot: {lot}")
-    if go_to_lot(system, location, lot):
+    print(system, location, lot)
+    if not virtual:
+        go_to = go_to_lot
+    else:
+        go_to = go_to_lot_virtual
+    if go_to(system, location, lot):
         print(f"at lot: {lot}")
         keyboard.command(('shift', 'f10'))
         info = lots.get_lot_info()
+        print(info)
         keyboard.f12()
+        print(info)
         return info
     return False
 
@@ -129,21 +150,28 @@ def clean_priced_lots(priced_lots, system):
     # check if NULL and remove
     return get_data.remove_null_priced_lots(priced_lots, system)
 
-
-def price_location_quick(system, from_date, to_date, location, price_level):
+def price_location_virtual(system, from_date, to_date, location, price_level):
     # get list of articles already created to avoid double creation
     added_articles = set(get_data.get_articles_codes(system))
+    stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=True)
 
-    stock_lots = get_stock_lots(system, from_date, to_date, location, price_level)
+def price_location_quick(system, from_date, to_date, location, price_level, virtual=False):
+    # get list of articles already created to avoid double creation
+    dsystem = system
+    if virtual:
+        dsystem = system[:-4] + 'virtual'
+    added_articles = set(get_data.get_articles_codes(system))
+    stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=virtual)
     if not stock_lots:
         return False
     stock_lots_list = list(stock_lots.keys())
     new_lots = []
     if stock_lots_list:
-        new_lots = get_data.get_new_lots(system, stock_lots_list)
+        new_lots = get_data.get_new_lots(dsystem, stock_lots_list)
 
     for new_lot in new_lots:
-        lot_info = get_stock_information(system, location, new_lot)
+        lot_info = get_stock_information(system, location, new_lot, virtual=virtual)
+        print(lot_info)
         if lot_info:
             assortment_code = lot_info['assortment_code']
             colour = lot_info['colour']
@@ -166,10 +194,12 @@ def price_location_quick(system, from_date, to_date, location, price_level):
                 pass
             result = get_data.check_assortment_price(assortment_code, week, year, system)
             id, price = result
-            insert_data.insert_lot_price(new_lot, system, id, landed)
+
+            insert_data.insert_lot_price(new_lot, dsystem, id, landed)
 
     #price_lots = get_lots_to_price(location, from_date, to_date)
-    price_lots = clean_priced_lots(stock_lots_list, system)
+    price_lots = clean_priced_lots(stock_lots_list, dsystem)
+    print(price_lots)
     for lot in price_lots:
         lot_num = lot['lot']
         price = lot['price']
@@ -178,8 +208,8 @@ def price_location_quick(system, from_date, to_date, location, price_level):
         else:
 
 
-            lot_info = get_stock_information(system, location, lot_num)
-            price_lot(system, lot_num, location, price)
+            lot_info = get_stock_information(system, location, lot_num, virtual=virtual)
+            price_lot(system, lot_num, location, price, virtual=virtual)
 
 
 
@@ -233,7 +263,7 @@ def price_location(system, from_date, to_date, location, price_level):
             else:
                 insert_data.insert_weekly_price(system, week, year, assortment_code, None)
 
-def price_system():
+def price_system(virtual=False):
     from_date = '00/00/00'
     to_date = '30/11/45'
     price_level = 1
@@ -241,7 +271,7 @@ def price_system():
 
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
-        price_location_quick(system, from_date, to_date, location, price_level)
+        price_location_quick(system, from_date, to_date, location, price_level, virtual=virtual)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
         keyboard.command('esc')
@@ -259,9 +289,19 @@ if __name__ == "__main__":
     price_level = 1
     #price_location_quick(system, from_date, to_date, location, price_level)
 
+    price_system(virtual=True)
 
-    for location in SHIPMENT_LOCATIONS:
-        print(f"location: {location}")
-        price_location_quick(system, from_date, to_date, location, price_level)
+    location = 'on'
+    lot = '647801'
+    print(f2_page.verify_lot_info(lot, virtual=True))
 
+    #print(go_to_lot_virtual(system, location, lot, attempt=0))
+
+    #get_stock_information(system, 'on', '647804')
+    #for location in SHIPMENT_LOCATIONS:
+    #    print(f"location: {location}")
+    #    price_location_quick(system, from_date, to_date, location, price_level)
+        #pass
+
+        #price_location_quick(system, from_date, to_date, location, price_level)
 
