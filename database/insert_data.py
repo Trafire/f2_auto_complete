@@ -6,7 +6,6 @@ import datetime
 
 
 def insert_category(category_code, category_name):
-    engine = c_engine()
     connection = engine.connect()
     query = f"INSERT INTO f2connection_categories (category_code,category_name) VALUES ('{category_code}','{category_name}')"
     connection.execute(query)
@@ -14,7 +13,6 @@ def insert_category(category_code, category_name):
 
 
 def insert_lot_price(lot, system, price_id, landed):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''INSERT INTO 
                 f2connection_pricedlots (lot, system, price_id, landed) 
@@ -25,7 +23,6 @@ def insert_lot_price(lot, system, price_id, landed):
 
 
 def insert_weekly_price(system, week, year, assortment_code, price):
-    engine = c_engine()
     connection = engine.connect()
     assortment_code = assortment_code.replace("'", "''")
     if price:
@@ -49,8 +46,6 @@ def escape_text(text):
 
 
 def insert_assortment(assortment_code, system, grade, colour, category_code, category_name, name):
-
-    engine = c_engine()
     connection = engine.connect()
     query = f'''INSERT INTO 
                         f2connection_assortment(assortment_code, system, grade, colour, category_code_id, category_name, name) 
@@ -92,7 +87,6 @@ def insert_purchase_lots(lots):
 
 
 def insert_cmd_purchase_dates(purchase_date):
-    engine = c_engine()
     connection = engine.connect()
     query = f"INSERT INTO f2connection_cmdpurchasedates (purchase_date) VALUES ('{purchase_date}')"
     connection.execute(query)
@@ -100,7 +94,6 @@ def insert_cmd_purchase_dates(purchase_date):
 
 
 def insert_command(command, reference, state, system):
-    engine = c_engine()
     connection = engine.connect()
     if reference:
         query = f'''INSERT INTO f2connection_commands (command, reference, status, system)
@@ -114,7 +107,6 @@ def insert_command(command, reference, state, system):
 
 
 def bulk_insert_command(data):
-    engine = c_engine()
     connection = engine.connect()
     for d in data:
         command, reference, state, system = d
@@ -130,7 +122,6 @@ def bulk_insert_command(data):
 
 
 def insert_open_lines(system, data_list):
-    engine = c_engine()
     connection = engine.connect()
 
     for data in data_list:
@@ -146,7 +137,6 @@ def insert_open_lines(system, data_list):
     connection.close()
 
 def insert_last_done(system,action, reference):
-    engine = c_engine()
     connection = engine.connect()
     time_done = datetime.datetime.now(datetime.timezone.utc)
     query = ''' 
@@ -157,7 +147,7 @@ def insert_last_done(system,action, reference):
     connection.execute(query, (system, action, time_done, reference))
 
 
-
+engine = c_engine()
 
 ''' inserts category names and codes into database
 from interface import keyboard, window
@@ -209,6 +199,7 @@ def update_categories():
 '''
 # return bool(answer[0])
 system = 'f2_canada_real'
+
 #insert_assortment('ealnicep0', 'f2_canada_real', '80', 'PID', '3251',  ' Alstro SA', 'Nice')
 #insert_week_done(system,2020, 3)
 #data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}

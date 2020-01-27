@@ -3,8 +3,6 @@ from parse import dates
 
 
 def get_time_since_report(system, action, reference):
-    engine = c_engine()
-
     connection = engine.connect()
     query = ''' SELECT time_done from f2connection_lastdone
     WHERE system=%s and action=%s and reference=%s
@@ -17,7 +15,6 @@ def get_time_since_report(system, action, reference):
 
 
 def get_lot_price(system, lot):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT f2connection_weeklyprices.price
                         FROM f2connection_weeklyprices
@@ -30,7 +27,7 @@ def get_lot_price(system, lot):
 
 
 def get_category_name(category_code):
-    engine = c_engine()
+
     connection = engine.connect()
     query = f"SELECT category_name FROM f2connection_categories WHERE category_code = '{category_code}'"
     answer = connection.execute(query).fetchone()
@@ -56,7 +53,6 @@ def get_category_name(category_code):
 
 
 def check_priced_lots(lot, system):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT COUNT(1)
                 FROM f2connection_pricedlots
@@ -67,7 +63,6 @@ def check_priced_lots(lot, system):
 
 def check_priced_lots_bulk(lots, system):
     lots = tuple(lots)
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT lot
                 FROM f2connection_pricedlots
@@ -81,7 +76,6 @@ def check_priced_lots_bulk(lots, system):
 
 def remove_null_priced_lots(lots, system):
     lots = tuple(lots)
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT lot, f2connection_weeklyprices.price
                     FROM f2connection_pricedlots
@@ -99,7 +93,6 @@ def remove_null_priced_lots(lots, system):
 
 
 def check_assortment_price(assortment_code, week, year, system):
-    engine = c_engine()
     connection = engine.connect()
     assortment_code = assortment_code.replace("'", "''")
     query = f'''SELECT id, price
@@ -115,7 +108,6 @@ def check_assortment_price(assortment_code, week, year, system):
 
 
 def get_articles_codes(system):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT assortment_code
                 FROM f2connection_assortment
@@ -129,8 +121,6 @@ def get_articles_codes(system):
 
 def get_new_lots(system, lots):
     lots = tuple(lots)
-
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT lot
                     FROM f2connection_pricedlots
@@ -148,7 +138,6 @@ def get_new_lots(system, lots):
 
 
 def get_purchse_lot(system, lot):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT *
                         FROM f2connection_purchases
@@ -158,7 +147,6 @@ def get_purchse_lot(system, lot):
 
 
 def get_command(system):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT *
                             FROM f2connection_commands
@@ -175,7 +163,6 @@ def get_command(system):
 
 
 def get_input_purchase_date_cmd(id):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT purchase_date
                                 FROM f2connection_cmdpurchasedates
@@ -186,7 +173,6 @@ def get_input_purchase_date_cmd(id):
 
 
 def get_purchases_assortment_null(system):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''
     SELECT lot, purchase_date
@@ -200,7 +186,6 @@ def get_purchases_assortment_null(system):
 
 
 def get_cmdpurchasedates_id(purchase_date):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''SELECT id
                                     FROM f2connection_cmdpurchasedates
@@ -208,6 +193,8 @@ def get_cmdpurchasedates_id(purchase_date):
     answer = connection.execute(query).first()
     if answer:
         return answer[0]
+
+engine = c_engine()
 
 
 if '__main__' == __name__:

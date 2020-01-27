@@ -4,7 +4,6 @@ import datetime
 
 
 def update_landed(lot, system, landed):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''
     UPDATE f2connection_pricedlots
@@ -16,7 +15,6 @@ def update_landed(lot, system, landed):
 
 
 def update_command_status(id, status):
-    engine = c_engine()
     connection = engine.connect()
     query = f'''
         UPDATE f2connection_commands
@@ -28,7 +26,6 @@ def update_command_status(id, status):
 
 
 def update_unmatched_purchases():
-    engine = c_engine()
     connection = engine.connect()
     query = f'''
         UPDATE f2connection_purchases
@@ -41,7 +38,6 @@ def update_unmatched_purchases():
 
 
 def update_purchases_assortment(system, lot, assortment_code):
-    engine = c_engine()
     connection = engine.connect()
     assortment_code = assortment_code.replace("'", "''")
     query = f'''
@@ -54,7 +50,6 @@ def update_purchases_assortment(system, lot, assortment_code):
 
 
 def update_last_done(system, action, reference):
-    engine = c_engine()
     connection = engine.connect()
     time_done = datetime.datetime.now(datetime.timezone.utc)
     query = f'''
@@ -63,3 +58,5 @@ def update_last_done(system, action, reference):
     WHERE system=%s and action=%s and reference=%s
     '''
     connection.execute(query, (time_done, system, action, reference))
+
+engine = c_engine()
