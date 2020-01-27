@@ -64,10 +64,12 @@ def update_purchases(system, purchase_date):
         update_data.update_unmatched_purchases()
         null_lots = get_data.get_purchases_assortment_null(system)
         for lot in null_lots:
-            data = get_lot_data(lot, system)
-            if data:
-                update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'],
-                                                        data['supplier_code'])
+            print(lot, purchase_date.date(), lot == purchase_date.date())
+            if lot[1] == purchase_date.date():
+                data = get_lot_data(lot, system)
+                if data:
+                    update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'],
+                                                            data['supplier_code'])
     update_time_since_last_report(system,purchase_date )
     return True
 
@@ -84,6 +86,9 @@ def is_purchase_day_due(system,day, distance):
     if not time:
         return True
     hours = abs(distance)
+    if hours == 0:
+        hours = 1
+
     if time > datetime.timedelta(hours=hours):
         return True
     return False
