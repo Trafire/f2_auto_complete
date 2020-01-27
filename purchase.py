@@ -42,14 +42,10 @@ def get_lot_data(lot, system):
     if not lot_main or lot_number not in lot_main:
         return False
     lot_main = lot_main[lot_number]
-    print(45, lot_main)
     supplier_code = lot_main['supplier_code']
-    print(47, supplier_code)
     if not supplier_code or supplier_code[0] in ('M','1') and 'f2_canada' in system:
         return False
-    print(lot_number, purchase_date, supplier_code)
     data = lots.get_lot_info_purchase(lot_number, purchase_date, supplier_code)
-    print(data)
     keyboard.f12()
     return data
 
@@ -69,7 +65,6 @@ def update_purchases(system, purchase_date):
         null_lots = get_data.get_purchases_assortment_null(system)
         for lot in null_lots:
             data = get_lot_data(lot, system)
-            print(data)
             if data:
                 update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'],
                                                         data['supplier_code'])
@@ -96,7 +91,6 @@ def is_purchase_day_due(system,day, distance):
 if __name__ == '__main__':
     system = 'f2_canada_real'
     # data = get_lot_data(['574399', dates.menu_date('03/01/19')], system)
-    # print(data)
     # update_data.update_purchases_assortment(system, data['lot_number'], data['assortment_code'])
     update_purchases(system, dates.menu_date('31/01/20'))
 

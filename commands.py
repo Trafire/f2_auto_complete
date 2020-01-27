@@ -17,7 +17,6 @@ def restart(command):
     closef2.restart_pc()
 
 def get_order_lines(command):
-    print(command)
     update_status(command, "started")
     reference = int(command['reference'])
     date = datetime.datetime.now() + datetime.timedelta(days= reference)
@@ -59,7 +58,6 @@ def two_weeks_purchases(system):
     days.sort()
     for d in days:
         day = dates.get_database_date(d)
-        print(day)
         create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
 
 
@@ -72,7 +70,6 @@ STATUS = {"started": "started", "unstarted": "unstarted", "completed": "complete
 
 def process_command(system):
     command = get_next_command(system)
-    print(command)
     if command:
         # update_data.update_command_status(command['id'], STATUS['started'])
         if command['command'] in COMMANDS:
@@ -86,23 +83,6 @@ def process_command(system):
 
 
 if __name__ == "__main__":
-    '''
-    today = datetime.datetime.now()
-    days = set()
-    for i in range(20):
-        days.add(today + datetime.timedelta(days=30 + i))
-    days = list(days)
-    days.sort()
-    index = 0
-    for d in days:
-        index += 1
-        day = dates.get_database_date(d)
-        print(day)
-        create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
-        if index > 25:
-            create_command(system, restart, None, STATUS['unstarted'])
-            index = 0
-            '''
     #command = {'id': 1514, 'command': 'get_open_lines', 'reference': 1, 'status': 'unstarted', 'system': 'f2_canada_real'}
     #get_order_lines(command)
     two_weeks_purchases(system)

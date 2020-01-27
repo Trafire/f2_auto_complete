@@ -171,7 +171,6 @@ def price_location_quick(system, from_date, to_date, location, price_level):
     #price_lots = get_lots_to_price(location, from_date, to_date)
     price_lots = clean_priced_lots(stock_lots_list, system)
     for lot in price_lots:
-        print(lot)
         lot_num = lot['lot']
         price = lot['price']
         if lot_num in stock_lots and stock_lots[lot_num]['price'] == price:
@@ -180,7 +179,6 @@ def price_location_quick(system, from_date, to_date, location, price_level):
 
 
             lot_info = get_stock_information(system, location, lot_num)
-            print(lot_info)
             price_lot(system, lot_num, location, price)
 
 
@@ -201,7 +199,7 @@ def price_location(system, from_date, to_date, location, price_level):
 
     added_articles = get_data.get_articles_codes(system)
     for lot in to_price_lots:
-        print(lot)
+
         lot_info = get_stock_information(system, location, lot)
         if lot_info:
             assortment_code = lot_info['assortment_code']
@@ -216,12 +214,6 @@ def price_location(system, from_date, to_date, location, price_level):
             result = get_data.check_assortment_price(assortment_code, week, year, system)
             update_data.update_landed(lot, system, landed)
             if assortment_code not in added_articles:
-                '''try:
-                    print('start pass')
-                    insert_data.insert_assortment(assortment_code, system, grade, colour, category_code, category_name, name)
-                    print('pass')
-                except(sqlalchemy.exc.IntegrityError):
-                    print("fail")'''
                 insert_data.insert_assortment(assortment_code, system, grade, colour, category_code, category_name,
                                               name)
             added_articles.append(assortment_code)
@@ -247,7 +239,6 @@ def price_system():
     price_level = 1
     # price_location_quick(system, from_date, to_date, location, price_level)
 
-    # print('done')
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
         price_location_quick(system, from_date, to_date, location, price_level)
@@ -268,55 +259,9 @@ if __name__ == "__main__":
     price_level = 1
     #price_location_quick(system, from_date, to_date, location, price_level)
 
-    #print('done')
+
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
         price_location_quick(system, from_date, to_date, location, price_level)
-        #pass
-
-        #price_location_quick(system, from_date, to_date, location, price_level)
 
 
-    # l = '639733'
-    # print(get_stock_information(system, location, l))
-
-    # l = get_lots_to_price_quick(location, from_date, to_date)
-    # l.sort()
-    # print(l)
-    '''
-    lot = '641913'
-    lot_info = get_stock_information(system, location, lot)
-    print(lot_info)
-    assortment_code = lot_info['assortment_code']
-    week = dates.get_week(lot_info['purchase_date'])
-    year = dates.get_year(lot_info['purchase_date'])
-    price = get_data.check_assortment_price(assortment_code, week, year, system)
-    
-    if price:
-        if go_to_lot(system, location, lot):
-            price_lot(system, lot, location, price)
-    
-    # data = get_stock_lots(system, from_date, to_date, location, price_level)
-    # print(data)
-    # price_location(system, from_date, to_date, location, price_level)
-    
-    
-    
-    l = get_stock_information(system, location, lot)
-    print(l)
-    
-    data = get_stock_lots(system, from_date, to_date, location, price_level)
-    print(data)
-    print(len(data))
-    to_price = []
-    for d in data:
-        lot_data = data[d]
-        print(lot_data)
-        if not check_lot_priced(system, lot_data):
-            to_price.append(d)
-    
-        print(d, go_to_lot(system, location, d))
-        print(lots.get_lot_info())
-    
-    print = to_price
-    '''

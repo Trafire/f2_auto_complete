@@ -19,7 +19,7 @@ def insert_lot_price(lot, system, price_id, landed):
                 VALUES ('{lot}','{system}','{price_id}','{landed}')'''
     connection.execute(query)
     connection.close()
-    print("inserted", lot, price_id)
+
 
 
 def insert_weekly_price(system, week, year, assortment_code, price):
@@ -73,7 +73,6 @@ def insert_purchase_lots(lots):
     for lot_num in lots:
         data = lots[lot_num]
         exists = get_data.get_purchse_lot(system, data['lot'])
-        print(76, data)
 
         if not exists:
             engine = c_engine()
@@ -147,65 +146,4 @@ def insert_last_done(system,action, reference):
 
 
 engine = c_engine()
-
-''' inserts category names and codes into database
-from interface import keyboard, window
-from parse import parse
-import time
-
-def insert_to(answer):
-    category_code, category_name = answer['category_code'], answer['category_name']
-    if category_code and category_name:
-        insert_category(category_code, category_name)
-
-def find_text_end(screen, reference):
-    text = reference['text']
-    length = reference['length']
-    if text in screen:
-        index = screen.index(text) + len(text)
-        return screen[index: index + length].rstrip()
-    return False
-
-def get_category():
-    window.get_window()
-    keyboard.f11(1)
-    time.sleep(.1)
-    screen = window.get_window()
-
-    cat_name = "English    : "
-    art = '(ArtGrp '
-    d = [
-        {'data_point': 'category_code', 'text': art, 'length': 4},
-        {'data_point': 'category_name', 'text': cat_name, 'length': 30},
-    ]
-    answer = {}
-    for reference in d:
-        answer[reference['data_point']] = find_text_end(screen, reference)
-    print(answer)
-    keyboard.f12(1)
-    keyboard.command('down')
-    return answer
-
-def update_categories():
-    for i in range(300):
-        answer = get_category()
-        try:
-            insert_to(answer)
-        except:
-            pass
-    
-        time.sleep(.1)
-'''
-# return bool(answer[0])
 system = 'f2_canada_real'
-
-#insert_assortment('ealnicep0', 'f2_canada_real', '80', 'PID', '3251',  ' Alstro SA', 'Nice')
-#insert_week_done(system,2020, 3)
-#data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}
-#insert_open_lines(system, [data])
-#data = {'orderid': 'ShrubsPussy WillowBR100CABRAN', 'category': 'Shrubs', 'variety': "Pussy 'Willow", 'colour': 'BR', 'grade': '100', 'client_code': 'BEYOND', 'order_date': datetime.datetime(2020, 1, 20, 0, 0), 'quantity': 4, 'supplier_code': 'CABRAN', 'standing': 'False', 'comment': ''}
-#insert_open_lines(system, [data])
-# insert_lot_price(641632, system, 2)
-# print(insert_weekly_price(system, 52, 2019, 'appl6',  .59))
-
-
