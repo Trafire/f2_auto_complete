@@ -159,7 +159,7 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
     # get list of articles already created to avoid double creation
     dsystem = system
     if virtual:
-        dsystem = system[:-4] + 'virtual'
+        dsystem = system + '_virtual'
     added_articles = set(get_data.get_articles_codes(system))
     stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=virtual)
     if not stock_lots:
@@ -263,7 +263,7 @@ def price_location(system, from_date, to_date, location, price_level):
             else:
                 insert_data.insert_weekly_price(system, week, year, assortment_code, None)
 
-def price_system(virtual=False):
+def price_system():
     from_date = '00/00/00'
     to_date = '30/11/45'
     price_level = 1
@@ -271,7 +271,8 @@ def price_system(virtual=False):
 
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
-        price_location_quick(system, from_date, to_date, location, price_level, virtual=virtual)
+        price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
+        price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
         keyboard.command('esc')
