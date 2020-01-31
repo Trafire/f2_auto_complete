@@ -167,8 +167,9 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
     stock_lots_list = list(stock_lots.keys())
     new_lots = []
     if stock_lots_list:
+        start = time.time()
         delete_data.delete_items_in_location(system, location)
-        insert_data.insert_items_in_location(system,location,stock_lots_list)
+        insert_data.threaded_insert(insert_data.insert_items_in_location, (system,location,stock_lots_list))
         new_lots = get_data.get_new_lots(dsystem, stock_lots_list)
 
     for new_lot in new_lots:
@@ -291,7 +292,7 @@ if __name__ == "__main__":
     from_date = '00/00/00'
     to_date = '30/11/45'
     price_level = 1
-    location = 'ec'
+    location = 'on'
     lot = '647801'
     price_location_quick(system, from_date, to_date, location, price_level)
 

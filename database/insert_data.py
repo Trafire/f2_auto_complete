@@ -3,7 +3,7 @@ from parse import dates
 import pymysql
 from database import get_data
 import datetime
-
+import threading
 
 def insert_category(category_code, category_name):
     connection = engine.connect()
@@ -22,9 +22,11 @@ def insert_lot_price(lot, system, price_id, landed):
 
 
 
+
 def insert_weekly_price(system, week, year, assortment_code, price):
     connection = engine.connect()
     assortment_code = assortment_code.replace("'", "''")
+
     if price:
         query = f'''INSERT INTO 
                     f2connection_weeklyprices (week, year, assortment_code, price, system) 
@@ -53,7 +55,12 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
     connection.execute(query, (assortment_code, system, grade, colour, category_code, category_name, name))
     connection.close()
 
+
+
+
+
 def insert_items_in_location(system, location, lot_nums):
+
     connection = engine.connect()
     for lot_num in lot_nums:
         query = f'''
@@ -158,6 +165,9 @@ def insert_last_done(system,action, reference):
     '''
     connection.execute(query, (system, action, time_done, reference))
 
+def threaded_insert(func=insert_items_in_location, args=[]):
+    x = threading.Thread(target=func, args=args)
+    x.start()
 
 engine = c_engine()
 system = 'f2_canada_real'

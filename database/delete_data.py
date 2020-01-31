@@ -24,4 +24,4 @@ def delete_items_in_location(system, location):
 
 engine = c_engine()
 system = 'f2_canada_real'
-location = 'on'
+location = 'cel'
