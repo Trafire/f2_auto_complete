@@ -194,6 +194,12 @@ def get_cmdpurchasedates_id(purchase_date):
     if answer:
         return answer[0]
 
+def get_stock_purchase_date(lot):
+    connection = engine.connect()
+    query = f'''SELECT id
+                                        FROM f2connection_cmdpurchasedates
+                                        WHERE purchase_date='{purchase_date}';'''
+
 engine = c_engine()
 
 

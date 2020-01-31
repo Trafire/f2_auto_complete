@@ -53,6 +53,20 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
     connection.execute(query, (assortment_code, system, grade, colour, category_code, category_name, name))
     connection.close()
 
+def insert_items_in_location(system, location, lot_nums):
+    connection = engine.connect()
+    for lot_num in lot_nums:
+        query = f'''
+        INSERT INTO f2connection_itemsinlocation (system, location, lots_id)
+        SELECT   f2connection_pricedlots.system, %s, f2connection_pricedlots.id
+        FROM f2connection_pricedlots
+        WHERE system= %s AND lot=%s;
+        '''
+        connection.execute(query, (location,system, lot_num))
+    connection.close()
+
+
+    connection = engine.connect()
 
     # '''assortment_code = escape_text(assortment_code)
     # colour = escape_text(colour)
@@ -147,3 +161,5 @@ def insert_last_done(system,action, reference):
 
 engine = c_engine()
 system = 'f2_canada_real'
+location = 'on'
+lot_num = '639765'
