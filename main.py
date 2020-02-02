@@ -94,12 +94,14 @@ if __name__ == '__main__':
             logged_in = True
         except:
             closef2.close()
-
+    print("checking for database connection...")
     while True:
         # wait for database to open
         try:
             # if database isn't open yet will get error
+
             get_data.check_priced_lots_bulk("12345", "test")
+            print('database connected...')
             break
         except pyautogui.FailSafeException:
             print("Corner exit Detected")
