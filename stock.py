@@ -279,8 +279,6 @@ def price_system():
         keyboard.command('esc')
         keyboard.command('esc')
 
-def get_lot_time():
-    pass
 
 # get_lots_to_price(location)
 # print(f2_page.verify_lot_info('641632'))

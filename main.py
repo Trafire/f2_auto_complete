@@ -79,12 +79,16 @@ def maintainance(system, index):
 if __name__ == '__main__':
     ### log in with only one F2 window open
     logged_in = False
+    tries = 0
     while not logged_in:
-
+        tries += 1
         username = f2_password['username']
         password = f2_password['password']
         system = 'f2_canada_real'
         closef2.close()
+        print(f'Login Attempt: {tries}')
+        if tries > 10:
+            closef2.restart_pc()
         try:
             login.sign_in_toronto(username, password, system, attempts=0)
             logged_in = True
