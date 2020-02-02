@@ -130,7 +130,8 @@ if __name__ == '__main__':
             print("Corner exit Detected")
             exit()
 
-        except:  # on error close f2 and relogin
+        except Exception as err:  # on error close f2 and relogin
+            print(err)
             error_count += 1
             print(f"error count: {error_count}")
             try:
