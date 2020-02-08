@@ -317,7 +317,7 @@ def price_system():
 
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
-        #price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
+        price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
         price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
