@@ -59,13 +59,14 @@ def verify_lot_info(lot_number, virtual=False):
         screen = 'lot_info'
 
     window_data = copy.deepcopy(VERIFICATION['screens'] [screen])
+    print(window_data)
     swaps = {
         '{lot_number}': lot_number,
     }
-    print(swaps)
+
     for w in window_data:
         w['target'] = swap_values(swaps, w['target'])
-
+    print(window_data)
     return f2.verify(window_data, 10)
 
 
@@ -83,7 +84,12 @@ if __name__ == '__main__':
     level = '2'
     #cmd = verify_per_location_price_level(location, level)
     #print(cmd)
-    print(verify_lot_info('641921'))
-    print(verify_lot_info('641913'))
+    #print(verify_lot_info('641921'))
+    #print(verify_lot_info('641913'))
+
+    a = f2.verify([{'target': 'Intern partijnummer  : 647801', 'location': (17, 97)}], 10)
+    #b =  f2.verify([{'target': 'Intern partijnummer  : 647801', 'location': (18, 97)}], 10)
+
+    print(a)
 
 # [{'target': 'Inkooporder', 'location': (19, 97)}, {'target': 'Art. info', 'location': (5, 98)}, {'target': 'VBN', 'location': (8, 97)}, {'target': 'Intern partijnummer  : 639545', 'location': (18, 97)}]

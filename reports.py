@@ -133,18 +133,18 @@ def update_week(system, year, week):
     return True
 
 '''
-
-week = 4
+system = 'f2_canada_real'
+week = 7
 year = 2020
 update_week(system, year, week)
 
 
 
 go_to_puchase_list()
-data = get_order_week(2020, 4)
+data = get_order_week(2020, 6)
 products = []
 '''
-system = 'f2_canada_real'
+
 #update_time_since_last_report(system, 2020, 4)
 #print(get_time_since_last_report(system, 2020, 4))
 #year = 2020

@@ -21,6 +21,7 @@ def verify_contains(strings, attempts):
 
 def verify(points, attempts=1):
     def tries(points):
+        #print(points)
         screen = parse.process_scene(window.get_window())
         for p in points:
             try:
