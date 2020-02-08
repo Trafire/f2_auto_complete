@@ -336,21 +336,21 @@ if __name__ == "__main__":
     to_date = '07/02/45'
     price_level = 1
     location = 'sale'
-    lot = '647801'
+    lot = '650878'
     #print(go_to_lot_virtual(system,location,'650743'))
     #lots = get_lots_to_price(location, from_date, to_date)
     #print(lots)
     #price_location_quick(system, from_date, to_date, location, price_level)
     #stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=False)
-    #lot_info = get_stock_information(system, location, '645859', virtual=False)
-    #print(lot_info)
+    lot_info = get_stock_information(system, location, lot, virtual=False)
+    print(lot_info)
 
     #price_system(virtual=True)
-    price_system()
+    #price_system()
     #print(set(get_data.get_articles_codes(system)))
 
 
-    lot = '650743'
+
     print(f2_page.verify_lot_info(lot, virtual=False))
 
     #print(go_to_lot_virtual(system, location, lot, attempt=0))

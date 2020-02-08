@@ -63,7 +63,7 @@ def is_report_due(system, year, week):
     time = get_time_since_last_report(system, year, week)
     if not time:
         return True
-    hours = double(weeks, .5)
+    hours = double(weeks, .15)
     if time > datetime.timedelta(hours=hours):
         return True
     return False

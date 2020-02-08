@@ -54,6 +54,7 @@ def find_text_end(screen, reference):
     return False
 
 def check_complete(lot_data):
+    print(lot_data)
     for key in lot_data:
         if key != 'colour' and not lot_data[key]:
             return False
