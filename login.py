@@ -51,7 +51,8 @@ def sign_in_toronto(username, password, system, attempts=0):
 
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_2']
 
-    if not f2.verify_contains(window_data_size_1, attempts=500):
+    if not f2.verify_contains(window_data_size_1, attempts=5):
+        print(f'sign in attempt {attempts}')
         return sign_in_toronto(username, password, attempts + 1)
 
     # choose syste,
