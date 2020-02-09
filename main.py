@@ -63,10 +63,10 @@ def schedule(system):
 
 def maintainance(system, index):
 
-    if index % 30 == 0:
+    if index % 100 == 0:
         closef2.close()
         login.sign_in_toronto(username, password, system)
-    if index > 119:
+    if index > 500:
         closef2.restart_pc()
 
 
