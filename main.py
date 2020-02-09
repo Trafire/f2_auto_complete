@@ -90,8 +90,8 @@ if __name__ == '__main__':
         if tries > 10:
             closef2.restart_pc()
         try:
-            login.sign_in_toronto(username, password, system, attempts=0)
-            logged_in = True
+            if login.sign_in_toronto(username, password, system, attempts=0):
+                logged_in = True
         except:
             closef2.close()
     print("checking for database connection...")
