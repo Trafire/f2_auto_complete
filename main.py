@@ -92,16 +92,17 @@ if __name__ == '__main__':
         try:
             if login.sign_in_toronto(username, password, system, attempts=0):
                 logged_in = True
+
+        except pyautogui.FailSafeException:
+            print("Corner exit Detected")
+            exit()
         except:
-            print('close f2')
             closef2.close()
     print("checking for database connection...")
     while True:
-        print("attempt to connect")
         # wait for database to open
         try:
             # if database isn't open yet will get error
-
             get_data.check_priced_lots_bulk("12345", "test")
             print('database connected...')
             break
