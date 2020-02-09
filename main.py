@@ -75,7 +75,6 @@ def maintainance(system, index):
 # add_to_startup(sys.executable)
 
 # log into system
-
 if __name__ == '__main__':
     ### log in with only one F2 window open
     logged_in = False
@@ -97,12 +96,14 @@ if __name__ == '__main__':
             print("Corner exit Detected")
             exit()
         except:
+            print('error')
             closef2.close()
     print("checking for database connection...")
     while True:
         # wait for database to open
         try:
             # if database isn't open yet will get error
+            print("connecting to database")
             get_data.check_priced_lots_bulk("12345", "test")
             print('database connected...')
             break
