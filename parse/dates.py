@@ -36,3 +36,12 @@ def get_year(date_object):
 def get_database_date(date_object):
     return date_object.strftime('%Y-%m-%d')
 
+def get_pricing_week(date_object):
+    if date_object.weekday() > 3:
+        date_object =  date_object + datetime.timedelta(week=1)
+    return get_week(date_object)
+
+def get_pricing_year(date_object):
+    if date_object.weekday() > 3:
+        date_object =  date_object + datetime.timedelta(week=1)
+    return get_year(date_object)

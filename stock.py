@@ -166,8 +166,8 @@ def update_stock_info(lot_info,new_lot,added_articles,dsystem):
     category_name = lot_info['catgeory']
     name = lot_info['name']
     grade = lot_info['grade']
-    week = dates.get_week(lot_info['purchase_date'])
-    year = dates.get_year(lot_info['purchase_date'])
+    week = dates.get_pricing_week(lot_info['purchase_date'])
+    year = dates.get_pricing_year(lot_info['purchase_date'])
     landed = lot_info['landed_price']
 
     # add article to db if it does not already exit
@@ -215,29 +215,6 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
                 print('threading failed')
                 update_stock_info(lot_info, new_lot, added_articles, dsystem)
 
-            '''assortment_code = lot_info['assortment_code']
-            colour = lot_info['colour']
-            category_code = lot_info['category_num']
-            category_name = lot_info['catgeory']
-            name = lot_info['name']
-            grade = lot_info['grade']
-            week = dates.get_week(lot_info['purchase_date'])
-            year = dates.get_year(lot_info['purchase_date'])
-            landed = lot_info['landed_price']
-
-            # add article to db if it does not already exit
-            if assortment_code not in added_articles:
-                insert_data.insert_assortment(assortment_code, system, grade, colour, category_code, category_name,
-                                              name)
-                added_articles.add(assortment_code)
-            try:
-                insert_data.insert_weekly_price(system, week, year, assortment_code, None)
-            except:
-                pass
-            result = get_data.check_assortment_price(assortment_code, week, year, system)
-            id, price = result
-
-            insert_data.insert_lot_price(new_lot, dsystem, id, landed)'''
 
     #price_lots = get_lots_to_price(location, from_date, to_date)
     price_lots = clean_priced_lots(stock_lots_list, dsystem)
@@ -282,8 +259,8 @@ def price_location(system, from_date, to_date, location, price_level):
             category_name = lot_info['catgeory']
             name = lot_info['name']
             grade = lot_info['grade']
-            week = dates.get_week(lot_info['purchase_date'])
-            year = dates.get_year(lot_info['purchase_date'])
+            week = dates.get_pricing_week (lot_info['purchase_date'])
+            year = dates.get_pricing_year(lot_info['purchase_date'])
             landed = lot_info['landed_price']
             result = get_data.check_assortment_price(assortment_code, week, year, system)
             update_data.update_landed(lot, system, landed)
@@ -346,7 +323,7 @@ if __name__ == "__main__":
     print(lot_info)
 
     #price_system(virtual=True)
-    #price_system()
+    price_system()
     #print(set(get_data.get_articles_codes(system)))
 
 
