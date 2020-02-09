@@ -38,12 +38,14 @@ def sign_in_toronto(username, password, system, attempts=0):
     login(username, password)
 
     if not f2.is_system_open(100):
+        print(f"system is not open attempt{attempts}")
         return sign_in_toronto(username, password, attempts + 1)
 
     # sign into f2 Canada
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_1']
 
     if not f2.verify_contains(window_data_size_1, attempts=500):
+        print("attemptint to varify")
         return sign_in_toronto(username, password, attempts + 1)
 
     keyboard.write_text(VERIFICATION['system_options']['f2_canada_menu_number'])
@@ -65,12 +67,14 @@ def sign_in_toronto(username, password, system, attempts=0):
     else:
         return False
     if not f2.verify(window_data, attempts=500):
+        print("line 70")
         return sign_in_toronto(username, password, attempts + 1)
 
     window_data = VERIFICATION['screens']['main_menu']
     if not f2.verify(window_data, attempts=500):
+        print('line 75')
         return sign_in_toronto(username, password, attempts + 1)
-
+    print('signed in')
     return True
 
 
