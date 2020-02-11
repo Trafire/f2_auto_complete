@@ -101,7 +101,7 @@ def check_lot_priced(system, lot_data):
     lot = lot_data['lot']
     price = lot_data['price']
     # if get_data.check_priced_lots(lot, system):
-    return str(get_data.get_lot_price(lot, system)) == price.replace(',', '.')
+    return str(get_data.get_lot_price_specials(lot, system)) == price.replace(',', '.')
 
 
 def get_lots_to_price(location, from_date='00/00/00', to_date='31/12/30'):
@@ -151,7 +151,7 @@ def get_stock_information(system, location, lot, virtual=False):
 
 def clean_priced_lots(priced_lots, system):
     # check if NULL and remove
-    return get_data.remove_null_priced_lots(priced_lots, system)
+    return get_data.remove_null_priced_lots_specials(priced_lots, system)
 
 def price_location_virtual(system, from_date, to_date, location, price_level):
     # get list of articles already created to avoid double creation
