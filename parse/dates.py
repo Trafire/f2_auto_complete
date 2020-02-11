@@ -38,10 +38,10 @@ def get_database_date(date_object):
 
 def get_pricing_week(date_object):
     if date_object.weekday() > 3:
-        date_object =  date_object + timedelta(week=1)
+        date_object =  date_object + timedelta(weeks=1)
     return get_week(date_object)
 
 def get_pricing_year(date_object):
     if date_object.weekday() > 3:
-        date_object =  date_object + timedelta(week=1)
+        date_object =  date_object + timedelta(weeks=1)
     return get_year(date_object)
