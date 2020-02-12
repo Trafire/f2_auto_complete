@@ -153,12 +153,12 @@ def get_stock_information(system, location, lot, virtual=False):
 def clean_priced_lots(priced_lots, system):
     # check if NULL and remove
     return get_data.remove_null_priced_lots_specials(priced_lots, system)
-
+'''
 def price_location_virtual(system, from_date, to_date, location, price_level):
     # get list of articles already created to avoid double creation
     added_articles = set(get_data.get_articles_codes(system))
     stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=True)
-
+'''
 
 def update_stock_info(lot_info,new_lot,added_articles,dsystem):
     assortment_code = lot_info['assortment_code']
@@ -221,7 +221,7 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
 
 
     #price_lots = get_lots_to_price(location, from_date, to_date)
-    price_lots = clean_priced_lots(stock_lots_list, dsystem)
+    price_lots = clean_priced_lots(stock_lots_list, system)
     print(price_lots)
     print(stock_lots)
 
