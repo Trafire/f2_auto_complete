@@ -13,7 +13,7 @@ import threading
 
 
 SHIPMENT_LOCATIONS = ['sale','on','ec', 'col' ]
-SHIPMENT_LOCATIONS = ['ec' ]
+#SHIPMENT_LOCATIONS = ['ec' ]
 #SHIPMENT_LOCATIONS = ['on']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
@@ -299,7 +299,7 @@ def price_system():
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
         price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
-        #price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
+        price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
         keyboard.command('esc')
