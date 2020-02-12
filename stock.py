@@ -192,6 +192,7 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
     added_articles = set(get_data.get_articles_codes(system))
     stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=virtual)
     if not stock_lots:
+        delete_data.delete_items_in_location(dsystem, location)
         return False
     stock_lots_list = list(stock_lots.keys())
     print(stock_lots_list)
