@@ -13,6 +13,7 @@ import threading
 
 
 SHIPMENT_LOCATIONS = ['sale','on','ec', 'col' ]
+SHIPMENT_LOCATIONS = ['ec' ]
 #SHIPMENT_LOCATIONS = ['on']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
@@ -55,10 +56,10 @@ def go_to_lot_virtual(system, location, lot, attempt=0):
 
     if f2_page.verify_per_location_virtual(location) and f2.verify_system(system):
         time.sleep(attempt * .05)
-        #keyboard.command('F7')
-        #keyboard.write_text(lot)
-        #keyboard.enter(2)
-        #keyboard.command(('shift', 'F10'))
+        keyboard.command('F7')
+        keyboard.write_text(lot)
+        keyboard.enter(2)
+        keyboard.command(('shift', 'F10'))
         found = f2_page.verify_lot_info(lot, virtual=True)
         keyboard.command('f12')
         if not found and attempt < 5:
@@ -205,8 +206,10 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
         delete_data.delete_items_in_location(system, location)
 
     print('newlots', new_lots)
+
     for new_lot in new_lots:
         lot_info = get_stock_information(system, location, new_lot, virtual=virtual)
+
         if lot_info:
             try:
                 x = threading.Thread(target=update_stock_info, args=(lot_info, new_lot, added_articles, dsystem))
@@ -296,7 +299,7 @@ def price_system():
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
         price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
-        price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
+        #price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
         keyboard.command('esc')
