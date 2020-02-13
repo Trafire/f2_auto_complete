@@ -1,3 +1,4 @@
+import time
 from interface import window
 from interface import keyboard
 from database import get_data
@@ -104,5 +105,17 @@ def get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt = 0):
     if check_complete(lot_data):
         return lot_data
     return get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt + 1)
+
+
+def get_recommended_price(attempt=0):
+    for i in range(20):
+        screen = window.get_window()
+        text = '1N║Flowers C&C'
+        if text in screen:
+            start = screen.index(text) + 37
+            end = start + 6
+            return screen[start:end].replace(',','.').strip()
+        time.sleep(.1)
+    return False
 
 

@@ -47,6 +47,13 @@ def update_purchases_assortment(system, lot, assortment_code, supplier):
     connection.execute(query,(assortment_code, supplier, lot,system))
     connection.close()
 
+def update_recommended_price(system, lot, price):
+    connection = engine.connect()
+    query = f'''
+                UPDATE f2connection_pricedlots
+                    SET recommended = %s
+                    WHERE lot=%s and system=%s;'''
+    connection.execute(query, (price, lot, system))
 
 def update_last_done(system, action, reference):
     connection = engine.connect()

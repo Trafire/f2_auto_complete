@@ -80,6 +80,20 @@ def check_priced_lots(lot, system):
     answer = connection.execute(query).fetchone()
     return bool(answer[0])
 
+def get_null_recommended(system, lots):
+    lots = tuple(lots)
+    print(lots)
+    connection = engine.connect()
+    query = f'''SELECT lot
+                    FROM f2connection_pricedlots
+                    WHERE lot IN {lots} and system='{system}' and recommended is null;'''
+    answer = connection.execute(query).fetchall()
+    print(answer)
+    result = []
+    for l in answer:
+        result.append(l[0])
+    return result
+
 
 def check_priced_lots_bulk(lots, system):
     lots = tuple(lots)
@@ -259,13 +273,17 @@ if '__main__' == __name__:
     # print(get_lot_price('640619', 'f2_canada_real'))
     year = 2019
     week = 49
-    lots = ['645465'
+    lots = ['645465',
             '645789',
             '649245',
             '649245',
-            '648696', ]
-    print(remove_null_priced_lots_specials(lots, system))
+            '648696',
+            '648004']
+    #print(remove_null_priced_lots_specials(lots, system))
     # print(get_purchases_assortment_null(system))
     # lots = ['639690', '641538', '640571']
     # print(check_priced_lots_bulk(lots, system))
     # print(get_articles_codes(system))
+
+
+    print(get_null_recommended(system, lots))
