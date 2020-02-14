@@ -12,7 +12,7 @@ import closef2
 import time
 import threading
 
-SHIPMENT_LOCATIONS = ['sale', 'on', 'ec', 'col']
+SHIPMENT_LOCATIONS = ['on', 'ec', 'col','nl','sale']
 # SHIPMENT_LOCATIONS = ['ec' ]
 # SHIPMENT_LOCATIONS = ['on']
 SELLING_LOCATIONS = ['sale']
