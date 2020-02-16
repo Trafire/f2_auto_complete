@@ -4,20 +4,20 @@ from interface import window
 from verification.reference import VERIFICATION
 
 
+def tries(strings):
+    screen = window.get_window()
+    for s in strings:
+        if not screen or s not in screen:
+            return False
+    return True
+
 def verify_contains(strings, attempts):
     print(attempts, strings )
-    def tries(strings):
-        screen = window.get_window()
-        for s in strings:
-            if not screen or s not in screen:
-                return False
-        return True
 
     for i in range(attempts):
         print(i,strings)
         if tries(strings):
             return True
-
     return False
 
 
