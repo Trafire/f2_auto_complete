@@ -45,7 +45,7 @@ VERIFICATION['system'] = {
 }
 
 VERIFICATION['screens'] = {
-    'text_login_menu_1': ['║      01)   FleuraMetz Holland         ║', '║      07)   FleuraMetz Toronto         ║'],
+    'text_login_menu_1': ['01)   FleuraMetz Holland', 'FleuraMetz Toronto'],
 
     'text_login_menu_2_large': [{'target': '║       1)   Toronto                    ║',
                                  'location': (5, 18)},
