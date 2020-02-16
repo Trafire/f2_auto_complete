@@ -32,6 +32,7 @@ def login(username, password):
 
 
 def sign_in_toronto(username, password, system, attempts=0):
+    print(f"starting login attempt: {attempts}")
     if attempts > 5:
         return False
     login(username, password)
@@ -39,10 +40,12 @@ def sign_in_toronto(username, password, system, attempts=0):
     if not f2.is_system_open(100):
         print(f"system is not open attempt{attempts}")
         return sign_in_toronto(username, password, attempts + 1)
+    else:
+        print("system has opened")
 
     # sign into f2 Canada
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_1']
-
+    print('verifying window')
     if not f2.verify_contains(window_data_size_1, attempts=500):
         print("attempting to varify")
         return sign_in_toronto(username, password, attempts + 1)

@@ -59,7 +59,7 @@ def get_window_info(targets):
 
 def is_system_open(tries=25):
     for i in range(tries):
-        print(f'is system open: {i}')
+        print(f'is system opening: {i}')
         key_phrase = VERIFICATION['f2_window']['any']
         open_windows = window.get_matching_handles(key_phrase)
         if len(open_windows) > 0:
