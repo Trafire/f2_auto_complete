@@ -5,6 +5,7 @@ from verification.reference import VERIFICATION
 
 
 def verify_contains(strings, attempts):
+    print(attempts, strings )
     def tries(strings):
         screen = window.get_window()
         for s in strings:

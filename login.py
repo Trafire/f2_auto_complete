@@ -46,6 +46,7 @@ def sign_in_toronto(username, password, system, attempts=0):
     # sign into f2 Canada
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_1']
     print('verifying window')
+    print(window_data_size_1)
     if not f2.verify_contains(window_data_size_1, attempts=500):
         print("attempting to varify")
         return sign_in_toronto(username, password, attempts + 1)

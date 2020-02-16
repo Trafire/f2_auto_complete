@@ -80,7 +80,6 @@ if __name__ == '__main__':
     logged_in = False
     tries = 0
     while not logged_in:
-        print(tries)
         tries += 1
         username = f2_password['username']
         password = f2_password['password']
