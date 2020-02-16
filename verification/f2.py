@@ -5,8 +5,11 @@ from verification.reference import VERIFICATION
 
 
 def tries(strings):
+    print('start tries')
     screen = window.get_window()
+    print(screen)
     for s in strings:
+        print(s)
         if not screen or s not in screen:
             return False
     return True
