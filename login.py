@@ -52,7 +52,7 @@ def sign_in_toronto(username, password, system, attempts=0):
         return sign_in_toronto(username, password, attempts + 1)
 
     keyboard.write_text(VERIFICATION['system_options']['f2_canada_menu_number'])
-    # sign into life system
+    # sign into live system
 
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_2']
 

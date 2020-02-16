@@ -14,6 +14,7 @@ def verify_contains(strings, attempts):
         return True
 
     for i in range(attempts):
+        print(i,strings)
         if tries(strings):
             return True
 
