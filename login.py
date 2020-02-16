@@ -32,7 +32,6 @@ def login(username, password):
 
 
 def sign_in_toronto(username, password, system, attempts=0):
-    tries = 0
     if attempts > 5:
         return False
     login(username, password)
@@ -45,7 +44,7 @@ def sign_in_toronto(username, password, system, attempts=0):
     window_data_size_1 = VERIFICATION['screens']['text_login_menu_1']
 
     if not f2.verify_contains(window_data_size_1, attempts=500):
-        print("attemptint to varify")
+        print("attempting to varify")
         return sign_in_toronto(username, password, attempts + 1)
 
     keyboard.write_text(VERIFICATION['system_options']['f2_canada_menu_number'])
@@ -67,12 +66,10 @@ def sign_in_toronto(username, password, system, attempts=0):
     else:
         return False
     if not f2.verify(window_data, attempts=500):
-        print("line 70")
         return sign_in_toronto(username, password, attempts + 1)
 
     window_data = VERIFICATION['screens']['main_menu']
     if not f2.verify(window_data, attempts=500):
-        print('line 75')
         return sign_in_toronto(username, password, attempts + 1)
     print('signed in')
     return True
@@ -83,4 +80,7 @@ password = f2_password['password']
 system = 'f2_canada_real'
 
 if __name__ == '__main__':
-    sign_in_toronto(username, password,system)
+    for i in range(5):
+        closef2.close()
+        sign_in_toronto(username, password,system)
+        closef2.close()

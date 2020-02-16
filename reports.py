@@ -1,6 +1,6 @@
 from navigation import traverse
 from autof2.navigation import navigation
-from autof2.dailytasks import purchaselist
+import purchaselist
 import datetime, time
 from datetime import date
 from parse import dates
@@ -132,20 +132,20 @@ def update_week(system, year, week):
     update_time_since_last_report(system, year, week)
     return True
 
-'''
-system = 'f2_canada_real'
-week = 7
-year = 2020
-update_week(system, year, week)
+
+# system = 'f2_canada_real'
+# week = 9
+# year = 2020
+# update_week(system, year, week)
 
 
 
-go_to_puchase_list()
-data = get_order_week(2020, 6)
-products = []
-'''
+#go_to_puchase_list()
+#data = get_order_week(2020, 6)
+#products = []
 
-#update_time_since_last_report(system, 2020, 4)
+
+#update_time_since_last_report(system, 2020, 12)
 #print(get_time_since_last_report(system, 2020, 4))
 #year = 2020
 #week = 4
