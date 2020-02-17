@@ -132,13 +132,12 @@ def update_week(system, year, week):
     update_time_since_last_report(system, year, week)
     return True
 
-
 # system = 'f2_canada_real'
 # week = 9
 # year = 2020
 # update_week(system, year, week)
-
-
+#
+#
 
 #go_to_puchase_list()
 #data = get_order_week(2020, 6)

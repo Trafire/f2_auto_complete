@@ -6,10 +6,22 @@ import win32con
 from autof2.interface import mouse
 from autof2.interface import clipboard
 from autof2.interface.send_data import SendData
-
+import win32clipboard, win32con
 from ctypes import windll
 
-
+def get_clipboard():
+    win32clipboard.OpenClipboard()
+    try:
+        text = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+    except (TypeError, win32clipboard.error):
+        try:
+            text = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT)
+            text = py3compat.cast_unicode(text, py3compat.DEFAULT_ENCODING)
+        except (TypeError, win32clipboard.error):
+            raise ClipboardEmpty
+    finally:
+        win32clipboard.CloseClipboard()
+    return text
 
 def callback(hwnd, strings):
     if win32gui.IsWindowVisible(hwnd):
@@ -106,7 +118,7 @@ def get_window():
     data = None
     for i in range(3):
         try:
-            data = clipboard.get_clipboard()
+            data = get_clipboard()
             break
         except:
             time.sleep(0.01)
