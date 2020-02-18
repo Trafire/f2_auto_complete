@@ -119,14 +119,13 @@ if __name__ == '__main__':
 
     while True:  # main loop
         try:
-            if error_count > 5:  # if the are 5 failures in a row, restart computer
+            if error_count > 10:  # if the are 5 failures in a row, restart computer
                 closef2.restart_pc()
 
             # do the item that is scheduled to do next
             schedule(system)
             maintainance(system, index)
             index += 1
-            error_count = 0
             print(index)
 
         except pyautogui.FailSafeException:  # manual stop program
