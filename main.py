@@ -139,6 +139,7 @@ if __name__ == '__main__':
             print(f"error count: {error_count}")
             try:
                 closef2.close()
+                closef2.close()
                 login.sign_in_toronto(username, password, system, attempts=0)
 
             except:  # if there is an error closing f2 and relogging in, then restart computer
