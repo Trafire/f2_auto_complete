@@ -48,7 +48,6 @@ def verify_per_location_price_level(location, level, attempt=0):
     }
     for w in window_data:
         w['target'] = swap_values(swaps, w['target'])
-    print(window_data)
     return verify_per_location(location) and f2.verify(window_data, 50)
 
 
@@ -59,14 +58,12 @@ def verify_lot_info(lot_number, virtual=False):
         screen = 'lot_info'
 
     window_data = copy.deepcopy(VERIFICATION['screens'] [screen])
-    print(window_data)
     swaps = {
         '{lot_number}': lot_number,
     }
 
     for w in window_data:
         w['target'] = swap_values(swaps, w['target'])
-    print(window_data)
     return f2.verify(window_data, 10)
 
 

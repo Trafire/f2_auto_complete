@@ -81,14 +81,14 @@ def check_priced_lots(lot, system):
     return bool(answer[0])
 
 def get_null_recommended(system, lots):
+    if not lots:
+        return []
     lots = tuple(lots)
-    print(lots)
     connection = engine.connect()
     query = f'''SELECT lot
                     FROM f2connection_pricedlots
                     WHERE lot IN {lots} and system='{system}' and recommended is null;'''
     answer = connection.execute(query).fetchall()
-    print(answer)
     result = []
     for l in answer:
         result.append(l[0])

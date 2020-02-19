@@ -7,18 +7,14 @@ from verification.reference import VERIFICATION
 def tries(strings):
     print('start tries')
     screen = window.get_window()
-    print(screen)
     for s in strings:
-        print(s)
         if not screen or s not in screen:
             return False
     return True
 
 def verify_contains(strings, attempts):
-    print(attempts, strings )
-
     for i in range(attempts):
-        print(i,strings)
+
         if tries(strings):
             return True
     return False
