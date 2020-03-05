@@ -3,6 +3,7 @@ from interface import window
 from interface import keyboard
 from database import get_data
 import parse
+
 try:
     from parse import dates
 except:
@@ -19,7 +20,6 @@ lot_reference = [
     {'data_point': 'supplier_code', 'text': 'Aanvoercode          :', 'length': 12},
     {'data_point': 'category_num', 'text': 'Agrp: ', 'length': 5},
     {'data_point': 'landed_price', 'text': 'Left in stock    :', 'length': 16},
-
 ]
 
 def get_landed(s):
@@ -38,6 +38,8 @@ def get_buying_price():
 def get_article_name(category):
     if category:
         text = parse.get_parsed_screen_body()[0].split('║')[-1][:-1]
+        if text == '':
+            text = parse.get_parsed_screen_body()[0].split('║')[-2][:-1]
         if '<' in text:
             end = text.index('<')
             text = text[:end]
@@ -52,12 +54,14 @@ def find_text_end(screen, reference):
     if text in screen:
         index = screen.index(text) + len(text)
         return screen[index: index + length].strip()
+    print(reference, 'failed')
     return False
 
 def check_complete(lot_data):
     #print(lot_data)
     for key in lot_data:
         if key != 'colour' and not lot_data[key]:
+            print('key',key)
             return False
     return True
 
@@ -75,13 +79,33 @@ def get_lot_info(attempt = 0):
     if not lot_data['assortment_code']:
         return get_lot_info(attempt + 1)
     lot_data['catgeory'] = get_category_name(lot_data['category_num'])
-
+    print(lot_data['catgeory'])
     lot_data['name'] = get_article_name(lot_data['catgeory'])
     lot_data['purchase_date'] = dates.lot_date(lot_data['purchase_date'])
     lot_data['landed_price'] = get_landed(lot_data['landed_price'])
+
     if check_complete(lot_data):
         return lot_data
     return get_lot_info(attempt + 1)
+
+def get_lot_info_assortment(attempt = 0):
+    keyboard.command(('shift', 'f10'))
+    if attempt > 4:
+
+        return False
+    print(f"attemtpt {attempt}")
+    screen = window.get_window()
+    lot_data = {}
+    for reference in lot_reference:
+        try:
+            lot_data[reference['data_point']] = find_text_end(screen, reference)
+        except:
+            pass
+    if not lot_data['assortment_code']:
+        return get_lot_info_assortment(attempt + 1)
+    lot_data['catgeory'] = get_category_name(lot_data['category_num'])
+    lot_data['name'] = get_article_name(lot_data['catgeory'])
+    return lot_data
 
 def get_lot_info_purchase(lot_number, purchase_date,supplier_code, attempt = 0):
     keyboard.command(('shift', 'f10'))
@@ -117,5 +141,4 @@ def get_recommended_price(attempt=0):
             return screen[start:end].replace(',','.').strip()
         time.sleep(.1)
     return False
-
 
