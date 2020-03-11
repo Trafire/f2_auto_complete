@@ -5,7 +5,8 @@ import pyautogui
 from sqlalchemy.exc import OperationalError
 
 import closef2
-import login, reports
+import login
+import reports
 from auth.passwords import f2_password
 from database import get_data, update_data, insert_data
 from parse import dates
@@ -66,7 +67,6 @@ def tasks():
         print(seconds)
         to_do.push({"job": job, 'reference': reference, }, seconds)
 
-
     return to_do
 
 
@@ -111,7 +111,7 @@ def system_loop(system, username, password, logged_in):
 
         while True:
             next_job = jobs.pop()
-            if do_job(system,next_job):
+            if do_job(system, next_job):
                 break
             else:
                 print(next_job, 'job failed')
@@ -137,5 +137,5 @@ if __name__ == '__main__':
             exit()
         except(OperationalError):
             print(f"Waiting For Database connection for {last_success[0]} min {last_success[1]} seconds")
-            if last_success[0] > 2:
-                print('Restart')
+            if last_success[0] > 3:
+                closef2.restart_pc()
