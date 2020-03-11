@@ -1,9 +1,12 @@
-from database.connect import c_engine
-from parse import dates
-import pymysql
-from database import get_data
 import datetime
 import threading
+
+import pymysql
+
+from database import get_data
+from database.connect import c_engine
+from parse import dates
+
 
 def insert_category(category_code, category_name):
     connection = engine.connect()
@@ -19,8 +22,6 @@ def insert_lot_price(lot, system, price_id, landed):
                 VALUES ('{lot}','{system}','{price_id}','{landed}')'''
     connection.execute(query)
     connection.close()
-
-
 
 
 def insert_weekly_price(system, week, year, assortment_code, price):
@@ -56,11 +57,7 @@ def insert_assortment(assortment_code, system, grade, colour, category_code, cat
     connection.close()
 
 
-
-
-
 def insert_items_in_location(system, location, lot_nums):
-
     connection = engine.connect()
     for lot_num in lot_nums:
         query = f'''
@@ -69,11 +66,10 @@ def insert_items_in_location(system, location, lot_nums):
         FROM f2connection_pricedlots
         WHERE system= %s AND lot=%s;
         '''
-        connection.execute(query, (location,system, lot_num))
+        connection.execute(query, (location, system, lot_num))
     connection.close()
 
-
-    connection = engine.connect()
+    #connection = engine.connect()
 
     # '''assortment_code = escape_text(assortment_code)
     # colour = escape_text(colour)
@@ -90,19 +86,16 @@ def insert_items_in_location(system, location, lot_nums):
 
 
 def insert_purchase_lots(lots):
-
+    connection = engine.connect()
     for lot_num in lots:
         data = lots[lot_num]
         exists = get_data.get_purchse_lot(system, data['lot'])
-
         if not exists:
-            engine = c_engine()
-            connection = engine.connect()
             query = '''INSERT INTO f2connection_purchases (system, purchase_date, lot,landed_price,supplier_code) VALUES (%s,%s,%s,%s,%s)'''
-            connection.execute(query,(data['system'],dates.get_database_date(data['purchase_date']),data['lot'], data['landed_price'], data['supplier_code']))
-            connection.close()
-
-
+            connection.execute(query, (
+            data['system'], dates.get_database_date(data['purchase_date']), data['lot'], data['landed_price'],
+            data['supplier_code']))
+    connection.close()
 
 
 def insert_cmd_purchase_dates(purchase_date):
@@ -139,7 +132,6 @@ def bulk_insert_command(data):
     connection.close()
 
 
-
 def insert_open_lines(system, data_list):
     connection = engine.connect()
 
@@ -152,10 +144,12 @@ def insert_open_lines(system, data_list):
         '{data['supplier_code']}', '{data['standing']}',  %s, '{datetime.datetime.now()}')
         
         '''
-        connection.execute(query, (data['category'], data['variety'],data['colour'],data['grade'],data['client_code'], data['comment']))
+        connection.execute(query, (
+        data['category'], data['variety'], data['colour'], data['grade'], data['client_code'], data['comment']))
     connection.close()
 
-def insert_last_done(system,action, reference):
+
+def insert_last_done(system, action, reference):
     connection = engine.connect()
     time_done = datetime.datetime.now(datetime.timezone.utc)
     query = ''' 
@@ -164,12 +158,42 @@ def insert_last_done(system,action, reference):
         (%s, %s,%s,%s)
     '''
     connection.execute(query, (system, action, time_done, reference))
+    connection.close()
+
+
+def insert_virtual_purchase_order(system, supplier_code, purchase_date, end_date, visible_from, visible_to):
+    connection = engine.connect()
+    query = '''
+    INSERT into f2connection_VirtualPurchaseOrder (system, supplier_code, purchase_date, end_date, visible_from, visible_to)
+    VALUES
+        (%s,%s,%s,%s,%s,%s)
+    RETURNING id;
+    '''
+    return \
+    connection.execute(query, (system, supplier_code, purchase_date, end_date, visible_from, visible_to)).fetchone()[0]
+    connection.close()
+
+def insert_virtual_purchase(assortment_code, quantity, packing, fob, landed, virtual_purchase_order_id, entered=False):
+    connection = engine.connect()
+    query = '''
+        INSERT into f2connection_VirtualPurchases (assortment_code, quantity, packing, fob, landed, virtual_purchase_order_id, entered)
+        VALUES
+        (%s,%s,%s,%s,%s,%s,%s)
+    '''
+    connection.execute(query, (assortment_code, quantity, packing, fob, landed, virtual_purchase_order_id, entered))
+    connection.close()
+
 
 def threaded_insert(func=insert_items_in_location, args=[]):
     x = threading.Thread(target=func, args=args)
     x.start()
 
+
 engine = c_engine()
 system = 'f2_canada_real'
 location = 'on'
 lot_num = '639765'
+purchase_date = datetime.date(month=3, day=6, year=2020)
+end_date = datetime.date(month=3, day=6, year=2020)
+visible_from = datetime.date(month=3, day=7, year=2020)
+visible_to = datetime.date(month=3, day=13, year=2020)

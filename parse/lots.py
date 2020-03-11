@@ -54,7 +54,7 @@ def find_text_end(screen, reference):
     if text in screen:
         index = screen.index(text) + len(text)
         return screen[index: index + length].strip()
-    print(reference, 'failed')
+    #print(reference, 'failed')
     return False
 
 def check_complete(lot_data):
@@ -68,7 +68,6 @@ def check_complete(lot_data):
 def get_lot_info(attempt = 0):
     keyboard.command(('shift', 'f10'))
     if attempt > 4:
-
         return False
     print(f"attemtpt {attempt}")
     screen = window.get_window()
@@ -81,8 +80,13 @@ def get_lot_info(attempt = 0):
     lot_data['catgeory'] = get_category_name(lot_data['category_num'])
     print(lot_data['catgeory'])
     lot_data['name'] = get_article_name(lot_data['catgeory'])
-    lot_data['purchase_date'] = dates.lot_date(lot_data['purchase_date'])
+    try:
+        lot_data['purchase_date'] = dates.lot_date(lot_data['purchase_date'])
+    except:
+        return get_lot_info(attempt + 1)
     lot_data['landed_price'] = get_landed(lot_data['landed_price'])
+    if not lot_data['landed_price']:
+        lot_data['landed_price'] = '0.01'
 
     if check_complete(lot_data):
         return lot_data
@@ -90,10 +94,10 @@ def get_lot_info(attempt = 0):
 
 def get_lot_info_assortment(attempt = 0):
     keyboard.command(('shift', 'f10'))
-    if attempt > 4:
+    if attempt > 20:
 
         return False
-    print(f"attemtpt {attempt}")
+    #print(f"attemtpt {attempt}")
     screen = window.get_window()
     lot_data = {}
     for reference in lot_reference:
@@ -141,4 +145,3 @@ def get_recommended_price(attempt=0):
             return screen[start:end].replace(',','.').strip()
         time.sleep(.1)
     return False
-

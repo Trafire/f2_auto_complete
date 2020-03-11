@@ -48,6 +48,11 @@ def create_command(system, command, reference, status):
         insert_data.insert_command('restart_pc', None, status, system)
 
 
+def create_virtual_purchase_order(system, reference):
+    create_command(system, 'input_virtual_purchase', reference, 'unstarted')
+
+
+
 def two_weeks_purchases(system):
     today = datetime.datetime.now()
     days = set()
@@ -60,10 +65,16 @@ def two_weeks_purchases(system):
         day = dates.get_database_date(d)
         create_command(system, get_input_purchases, {'purchase_date': day}, STATUS["unstarted"])
 
+def input_virtual_purchase(command):
+    system = command['system']
+    po = command['reference']
 
 
 
-COMMANDS = {'restart_pc': restart, 'get_input_purchases': get_input_purchases, 'get_open_lines':get_order_lines}
+
+
+COMMANDS = {'restart_pc': restart, 'get_input_purchases': get_input_purchases, 'get_open_lines':get_order_lines, 'input_virtual_purchase': input_virtual_purchase}
+
 system = 'f2_canada_real'
 STATUS = {"started": "started", "unstarted": "unstarted", "completed": "completed", "error": "error"}
 

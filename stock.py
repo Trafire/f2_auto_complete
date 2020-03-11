@@ -13,8 +13,7 @@ import time
 import threading
 
 SHIPMENT_LOCATIONS = ['on', 'ec', 'col','nl','sale']
-# SHIPMENT_LOCATIONS = ['ec' ]
-# SHIPMENT_LOCATIONS = ['on']
+SHIPMENT_LOCATIONS = ['sale']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
 system = 'f2_canada_real'
@@ -199,6 +198,8 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
         dsystem = system + '_virtual'
     added_articles = set(get_data.get_articles_codes(system))
     stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=virtual)
+    for s in stock_lots:
+        print(s, stock_lots[s])
     if not stock_lots:
         delete_data.delete_items_in_location(dsystem, location)
         return False
@@ -216,6 +217,8 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
 
     for new_lot in new_lots:
         lot_info = get_stock_information(system, location, new_lot, virtual=virtual)
+        print(new_lot, lot_info)
+
 
         if lot_info:
             update_recommended(system, new_lot)
@@ -296,6 +299,7 @@ def price_system():
 
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
+
         price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
         price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         update_recommended_stock_location(system, location)
@@ -332,7 +336,7 @@ def update_recommended_stock_location(system, location):
         update_recommended(system, str(l))
 
 
-if __name__ == "__main__" and False:
+if __name__ == "__main__" :
     from_date = '00/00/00'
     to_date = '07/02/45'
     price_level = 1
@@ -343,13 +347,16 @@ if __name__ == "__main__" and False:
     # print(lots)
     # price_location_quick(system, from_date, to_date, location, price_level)
     # stock_lots = 6480(system, from_date, to_date, location, price_level, virtual=False)
-    lot_info = get_stock_information(system, location, lot, virtual=False)
+    #lot_info = get_stock_information(system, location, lot, virtual=False)
+    #lot_info = get_stock_information(system, location, '653637', virtual=True)
+    #print(lot_info)
+    #price_system(virtual=True)
+    while True:
 
-    # price_system(virtual=True)
-    price_system()
+        price_system()
     # print(set(get_data.get_articles_codes(system)))
 
-    print(f2_page.verify_lot_info(lot, virtual=False))
+    #print(f2_page.verify_lot_info(lot, virtual=False))
 
     # print(go_to_lot_virtual(system, location, lot, attempt=0))
 

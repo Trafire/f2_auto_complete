@@ -1,6 +1,20 @@
 from database.connect import c_engine
 
 
+# def get_purchase_order(system, reference):
+#     connection = engine.connect()
+#     query = ''' SELECT * from f2connection_virtualpurchaseorder WHERE id=%s'''
+#     answer = connection.execute(query, (reference,)).fetchone()
+
+def get_virtual_purchase_order(reference):
+    connection = engine.connect()
+    query = ''' SELECT * from f2connection_virtualpurchaseorder WHERE id=%s'''
+    data =  connection.execute(query, (reference,)).fetchone()
+    connection.close()
+    return data
+
+
+
 def get_time_since_report(system, action, reference):
     connection = engine.connect()
     query = ''' SELECT time_done from f2connection_lastdone
@@ -8,6 +22,7 @@ def get_time_since_report(system, action, reference):
     
     '''
     answer = connection.execute(query, (system, action, reference)).fetchone()
+    connection.close()
     if answer:
         return answer[0]
     return False
@@ -21,6 +36,7 @@ def get_lot_price(system, lot):
                         WHERE lot = '{lot}' and f2connection_pricedlots.system='{system}';
                         '''
     answer = connection.execute(query).fetchone()
+    connection.close()
     if answer:
         return answer[0]
 
@@ -41,6 +57,7 @@ def get_lot_price_specials(system, lot):
             
             '''
     answer = connection.execute(query, (system, lot)).fetchone()
+    connection.close()
     if answer:
         for a in answer:
             if a:
@@ -51,10 +68,19 @@ def get_category_name(category_code):
     connection = engine.connect()
     query = f"SELECT category_name FROM f2connection_categories WHERE category_code = '{category_code}'"
     answer = connection.execute(query).fetchone()
+    connection.close()
 
     #    connection.close()
     if answer:
         return answer[0]
+
+def get_virtual_purchases_from_order(order):
+    connection = engine.connect()
+    query = '''SELECT * from f2connection_virtualpurchases where virtual_purchase_order_id=%s'''
+    answer = connection.execute(query, (order,)).fetchall()
+    connection.close()
+    if answer:
+        return answer
 
 
 """def get_lot_price(lot, system):
@@ -78,6 +104,7 @@ def check_priced_lots(lot, system):
                 FROM f2connection_pricedlots
                 WHERE lot = '{lot}' and system='{system}';'''
     answer = connection.execute(query).fetchone()
+    connection.close()
     return bool(answer[0])
 
 def get_null_recommended(system, lots):
@@ -85,12 +112,20 @@ def get_null_recommended(system, lots):
         return []
     lots = tuple(lots)
     connection = engine.connect()
-    query = f'''SELECT lot
-                    FROM f2connection_pricedlots
-                    WHERE lot IN {lots} and system='{system}' and recommended is null;'''
+    if len(lots) > 1:
+        query = f'''SELECT lot
+                        FROM f2connection_pricedlots
+                        WHERE lot IN {lots} and system='{system}' and recommended is null;'''
+    else:
+        query = f'''SELECT lot
+                                FROM f2connection_pricedlots
+                                WHERE lot = '{lots[0]}' and system='{system}' and recommended is null;'''
+
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
+
         result.append(l[0])
     return result
 
@@ -102,6 +137,7 @@ def check_priced_lots_bulk(lots, system):
                 FROM f2connection_pricedlots
                 WHERE lot IN {lots} and system='{system}';'''
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
         result.append(l[0])
@@ -127,6 +163,7 @@ def remove_null_priced_lots_specials(lots, system):
         query = str(query.replace(f'IN {lots}', f"= '{lots[0]}'"))
     print(query)
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
 
@@ -149,6 +186,7 @@ def remove_null_priced_lots(lots, system):
     if len(lots) == 1:
         query = query.replace(f'IN {lots}', f"= '{lots[0]}'")
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
         result.append({'lot': l[0], 'price': str(l[1])})
@@ -177,6 +215,7 @@ def get_articles_codes(system):
                 FROM f2connection_assortment
                 WHERE system='{system}';'''
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
         result.append(l[0])
@@ -195,6 +234,7 @@ def get_new_lots(system, lots):
                             FROM f2connection_pricedlots
                             WHERE lot = '{lots[0]}' and system='{system}';'''
     answer = connection.execute(query).fetchall()
+    connection.close()
     result = []
     for l in answer:
         result.append(l[0])
@@ -207,6 +247,7 @@ def get_purchse_lot(system, lot):
                         FROM f2connection_purchases
                         WHERE lot='{lot}' and system='{system}';'''
     answer = connection.execute(query).fetchone()
+    connection.close()
     return answer
 
 
@@ -216,6 +257,7 @@ def get_command(system):
                             FROM f2connection_commands
                             WHERE status='unstarted'  and system='{system}';'''
     answer = connection.execute(query).first()
+    connection.close()
     if answer:
         return {
             'id': answer[0],
@@ -232,6 +274,7 @@ def get_input_purchase_date_cmd(id):
                                 FROM f2connection_cmdpurchasedates
                                 WHERE id={id};'''
     answer = connection.execute(query).first()
+    connection.close()
     if answer:
         return answer[0]
 
@@ -243,6 +286,7 @@ def get_purchases_assortment_null(system):
         FROM f2connection_purchases
         WHERE system='{system}' and assortment_code isnull;'''
     data = connection.execute(query).fetchall()
+    connection.close()
     dlist = []
     for d in data:
         dlist.append((d[0], d[1]))
@@ -255,6 +299,7 @@ def get_cmdpurchasedates_id(purchase_date):
                                     FROM f2connection_cmdpurchasedates
                                     WHERE purchase_date='{purchase_date}';'''
     answer = connection.execute(query).first()
+    connection.close()
     if answer:
         return answer[0]
 
@@ -266,7 +311,11 @@ def get_stock_purchase_date(lot):
                                         WHERE purchase_date='{purchase_date}';'''
 
 
+
+
+
 engine = c_engine()
+
 
 if '__main__' == __name__:
     system = 'f2_canada_real'
@@ -286,4 +335,4 @@ if '__main__' == __name__:
     # print(get_articles_codes(system))
 
 
-    print(get_null_recommended(system, lots))
+

@@ -54,6 +54,7 @@ def update_recommended_price(system, lot, price):
                     SET recommended = %s
                     WHERE lot=%s and system=%s;'''
     connection.execute(query, (price, lot, system))
+    connection.close()
 
 def update_last_done(system, action, reference):
     connection = engine.connect()
@@ -64,5 +65,28 @@ def update_last_done(system, action, reference):
     WHERE system=%s and action=%s and reference=%s
     '''
     connection.execute(query, (time_done, system, action, reference))
+    connection.close()
+
+
+def update_purchase_orders_mark_entered(order, status):
+    connection = engine.connect()
+    query = f'''
+        UPDATE f2connection_virtualpurchases
+        SET entered=%s
+        WHERE virtual_purchase_order_id=%s
+        '''
+    connection.execute(query, (status, order))
+    connection.close()
+
+def update_weekly_price(system, year, week, code, price):
+    connection = engine.connect()
+    query = ''' 
+    Update f2connection_weeklyprices
+    SET price=%s
+    WHERE system=%s AND year=%s AND week=%s AND assortment_code=%s
+    '''
+    connection.execute(query, (price, system, year, week, code))
+    connection.close()
+
 
 engine = c_engine()

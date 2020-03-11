@@ -111,7 +111,7 @@ def drag_window():
     mouse.click_and_drag(c[0] + 25, c[1] + 50, c[2] - 25, c[3] - 50)
 
 
-def get_window():
+def get_window(attempt=0):
     send = SendData()
     drag_window()
     send.send('%c')
@@ -123,6 +123,8 @@ def get_window():
         except:
             time.sleep(0.01)
     #clipboard.empty_clipboard()
+    if data == None and attempt < 10:
+        return get_window(attempt + 1)
     return data
 
 

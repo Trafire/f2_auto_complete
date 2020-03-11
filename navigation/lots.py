@@ -12,6 +12,9 @@ def go_to_lot(lot_number):
 
 def go_to_pricing():
     screen = window.get_window()
+    if not screen:
+        time.sleep(.1)
+        screen = window.get_window()
     if 'Pricegroup:' in screen:
         keyboard.command('f1')
         keyboard.write_text('0')
@@ -26,6 +29,7 @@ def go_to_pricing():
 
 def go_to_price_lot(lot_number):
     return go_to_lot(lot_number) and go_to_pricing()
+
 
 
 def close_pricing():
