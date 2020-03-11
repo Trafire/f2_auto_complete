@@ -1,19 +1,18 @@
-from navigation import traverse
-from navigation import lots as lots_navigation
-from verification import f2_page, f2
-from interface import keyboard
-from parse import parse
-from parse import lots, dates
-from database import get_data, update_data
-import pricing
-from database import insert_data, delete_data
-# import sqlalchemy
-import closef2
-import time
 import threading
+# import sqlalchemy
+import time
 
-SHIPMENT_LOCATIONS = ['on', 'ec', 'col','nl','sale']
-SHIPMENT_LOCATIONS = ['sale']
+import pricing
+from database import get_data, update_data
+from database import insert_data, delete_data
+from interface import keyboard
+from navigation import lots as lots_navigation
+from navigation import traverse
+from parse import lots, dates
+from parse import parse
+from verification import f2_page, f2
+
+SHIPMENT_LOCATIONS = ['on', 'ec', 'col']
 SELLING_LOCATIONS = ['sale']
 COOLER_LOCATIONS = ['cel']
 system = 'f2_canada_real'
@@ -36,10 +35,15 @@ def price_item(price):
 
 def price_lot(system, lot, location, price, virtual=False):
     # window.drag_window()
+    print(lot)
     keyboard.command(('shift', 'F10'))
     if f2_page.verify_lot_info(lot, virtual=virtual):
+        print("on the right lot")
         keyboard.f12()
+
         if change_price_level(system, location, 0):
+            print("price level correct")
+            print('level changed')
             keyboard.command('f2')
             pricing.top_of_list()
             price_str = pricing.make_price_str(price)
@@ -56,7 +60,7 @@ def change_price_level(system, location, price_level):
 
 def go_to_lot_virtual(system, location, lot, attempt=0):
     if f2_page.verify_per_location_virtual(location) and f2.verify_system(system):
-        time.sleep(attempt * .05)
+        time.sleep(attempt * .1)
         keyboard.command('F7')
         keyboard.write_text(lot)
         keyboard.enter(2)
@@ -91,12 +95,14 @@ def get_stock_lots(system, from_date, to_date, location, price_level, virtual=Fa
                 for i in range(10):
                     new_screen = parse.get_parsed_screen_body()
                     if new_screen != old_screen:
+                        new_screen = parse.get_parsed_screen_body()
                         break
                     if i == 8:
                         return stock
                 old_screen = new_screen
                 stock.update(parse.get_stock_lots())
                 keyboard.pgdn()
+
     return {}
 
 
@@ -198,13 +204,12 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
         dsystem = system + '_virtual'
     added_articles = set(get_data.get_articles_codes(system))
     stock_lots = get_stock_lots(system, from_date, to_date, location, price_level, virtual=virtual)
-    for s in stock_lots:
-        print(s, stock_lots[s])
+    # for s in stock_lots:
+    #     print(s, stock_lots[s])
     if not stock_lots:
         delete_data.delete_items_in_location(dsystem, location)
         return False
     stock_lots_list = list(stock_lots.keys())
-    print(stock_lots_list)
     new_lots = []
     if stock_lots_list:
         delete_data.delete_items_in_location(system, location)
@@ -213,12 +218,9 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
     else:
         delete_data.delete_items_in_location(system, location)
 
-    print('newlots', new_lots)
-
     for new_lot in new_lots:
         lot_info = get_stock_information(system, location, new_lot, virtual=virtual)
-        print(new_lot, lot_info)
-
+        print("new_lot", new_lot, lot_info)
 
         if lot_info:
             update_recommended(system, new_lot)
@@ -231,17 +233,28 @@ def price_location_quick(system, from_date, to_date, location, price_level, virt
                 update_stock_info(lot_info, new_lot, added_articles, dsystem)
 
     price_lots = clean_priced_lots(stock_lots_list, system)
-    print(price_lots)
-    print(stock_lots)
 
+    if not virtual:
+        go_to = go_to_lot
+    else:
+        go_to = go_to_lot_virtual
     for lot in price_lots:
+
         lot_num = lot['lot']
         price = lot['price']
         if lot_num in stock_lots and stock_lots[lot_num]['price'] == price:
             pass
         else:
-            lot_info = get_stock_information(system, location, lot_num, virtual=virtual)
+
+            #exit()
+            go_to(system, location, lot_num, attempt=0)
+            #lot_info = get_stock_information(system, location, lot_num, virtual=virtual)
             price_lot(system, lot_num, location, price, virtual=virtual)
+            #exit()
+            #
+            # print(lot_info)
+            # exit()
+            # price_lot(system, lot_num, location, price, virtual=virtual)
 
     '''# returns lots that either are NULL price or wrong price.
     to_price_lots = get_lots_to_price(location, from_date, to_date)
@@ -299,13 +312,24 @@ def price_system():
 
     for location in SHIPMENT_LOCATIONS:
         print(f"location: {location}")
-
         price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
         price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
         update_recommended_stock_location(system, location)
         keyboard.command(('alt', 'f2'))
         keyboard.command('esc')
         keyboard.command('esc')
+
+
+def price_stock_location(location):
+    from_date = '00/00/00'
+    to_date = '30/11/45'
+    price_level = 1
+    price_location_quick(system, from_date, to_date, location, price_level, virtual=True)
+    price_location_quick(system, from_date, to_date, location, price_level, virtual=False)
+    update_recommended_stock_location(system, location)
+    keyboard.command(('alt', 'f2'))
+    keyboard.command('esc')
+    keyboard.command('esc')
 
 
 def get_recommended(lot_number):
@@ -318,12 +342,14 @@ def get_recommended(lot_number):
         lots_navigation.close_pricing()
         return False
 
+
 def update_recommended(system, lot_number):
-    price =  get_recommended(lot_number)
+    price = get_recommended(lot_number)
     print(lot_number, price)
     if price:
-        update_data.update_recommended_price(system,lot_number,price)
+        update_data.update_recommended_price(system, lot_number, price)
         return True
+
 
 def update_recommended_stock_location(system, location):
     from_date = '00/00/00'
@@ -336,27 +362,38 @@ def update_recommended_stock_location(system, location):
         update_recommended(system, str(l))
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
     from_date = '00/00/00'
     to_date = '07/02/45'
     price_level = 1
     location = 'sale'
-    lot = '650878'
+    price_system()
+    lot = '656086'
+    price = '4.95'
+    virtual= True
+    # from interface import window
+    # window.drag_window()
+    # try:
+    #     go_to_lot_virtual(system, location, lot, attempt=0)
+    #     price_lot(system, lot, location, price, virtual=virtual)
+    # except:
+    #     pass
+
     # print(go_to_lot_virtual(system,location,'650743'))
     # lots = get_lots_to_price(location, from_date, to_date)
     # print(lots)
     # price_location_quick(system, from_date, to_date, location, price_level)
     # stock_lots = 6480(system, from_date, to_date, location, price_level, virtual=False)
-    #lot_info = get_stock_information(system, location, lot, virtual=False)
-    #lot_info = get_stock_information(system, location, '653637', virtual=True)
-    #print(lot_info)
-    #price_system(virtual=True)
-    while True:
+    # lot_info = get_stock_information(system, location, lot, virtual=False)
+    # lot_info = get_stock_information(system, location, '653637', virtual=True)
+    # print(lot_info)
+    # price_system(virtual=True)
+    # while True:
+    #
 
-        price_system()
     # print(set(get_data.get_articles_codes(system)))
 
-    #print(f2_page.verify_lot_info(lot, virtual=False))
+    # print(f2_page.verify_lot_info(lot, virtual=False))
 
     # print(go_to_lot_virtual(system, location, lot, attempt=0))
 
