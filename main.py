@@ -1,146 +1,141 @@
-import getpass, os, sys
-import login
-import closef2
-from auth.passwords import f2_password
-import stock
-import time
-from database import get_data
-import pyautogui
-import commands
 import datetime
+import heapq
+
+import pyautogui
+from sqlalchemy.exc import OperationalError
+
+import closef2
+import login, reports
+from auth.passwords import f2_password
+from database import get_data, update_data, insert_data
 from parse import dates
-import reports
-import purchase
-
-def add_to_startup(executable, file_path=""):
-    if file_path == "":
-        file_path = os.path.dirname(os.path.realpath(__file__))
-    bat_path = r'C:\Users\%s\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup' % getpass.getuser()
-    print(bat_path)
-
-    with open(bat_path + '\\' + "f2_connection3.bat", "w+") as bat_file:
-        bat_file.write(rf'"{executable}" "{file_path}.main.py"')
-        bat_file.write("\n")
-        bat_file.write(
-            rf'"{file_path}/database/cloud_sql_proxy.exe" -instances="fmc-crm-252016:northamerica-northeast1:fmc-crm-db"=tcp:3306')
-
-    with open(bat_path + '\\' + "f2_connection4.bat", "w+") as bat_file:
-        bat_file.write(rf"{file_path}/env/Scripts/activate")
-        bat_file.write("\n")
-        bat_file.write(rf'"{executable}" "{file_path}/main.py"')
-        bat_file.write("\npause")
+from stock import SHIPMENT_LOCATIONS, SELLING_LOCATIONS, price_stock_location
 
 
-def schedule_purchase_reports(system, today, weeks=12):
-    for i in range(weeks):
-        day = today + datetime.timedelta(weeks=i)
-        year = dates.get_year(day)
-        week = dates.get_week(day)
-        if reports.is_report_due(system, year, week):
-            return reports.update_week(system, year, week)
+class PriorityQueue:
+    def __init__(self):
+        self._queue = []
+        self._index = 0
 
-def schedule_input_purchase(system,today, days=30):
-    for i in range(-5, days):
-        day = today + datetime.timedelta(days=i)
-        if purchase.is_purchase_day_due(system,day,i):
-            purchase.update_purchases(system, day)
-            return True
+    def push(self, item, priority):
+        heapq.heappush(self._queue, (-priority, self._index, item))
+        self._index += 1
+
+    def pop(self):
+        return heapq.heappop(self._queue)[-1]
 
 
-
-def schedule(system):
-    # priority events
-    if commands.process_command(system):
-        return True
-    # scheduled Events
-    ## get current_ time/date
-    today = datetime.datetime.now()
-    if schedule_purchase_reports(system, today, weeks=12):
-        return True
-    if schedule_input_purchase(system,today, days=30):
-        return True
-    stock.price_system()
-
-def maintainance(system, index):
-
-    if index % 100 == 0:
-        closef2.close()
-        login.sign_in_toronto(username, password, system)
-    if index > 500:
-        closef2.restart_pc()
+def min_sec_to_sec(t):
+    return t[0] * 60 + t[1]
 
 
+def get_job_time(job, reference, timer):
+    time_since = get_data.get_time_since_report(system, job, reference)
+    if time_since:
+        time_since = difference_in_seconds(time_since, datetime.datetime.now(datetime.timezone.utc))
+    else:
+        time_since = (999999, 999999)
+    return min_sec_to_sec(time_since) - min_sec_to_sec(timer)
 
-# database_cmd ='"database/cloud_sql_proxy.exe" -instances="fmc-crm-252016:northamerica-northeast1:fmc-crm-db"=tcp:3306'
-# add_to_startup(sys.executable)
 
-# log into system
+def tasks():
+    to_do = PriorityQueue()
+
+    # price location
+    for location in SHIPMENT_LOCATIONS:
+        timer = (8, 0)
+        job = 'price_location'
+        seconds = get_job_time(job, location, timer)
+        to_do.push({"job": job, 'reference': location, }, seconds)
+
+    for location in SELLING_LOCATIONS:
+        timer = (60, 0)
+        job = 'price_location'
+        seconds = get_job_time(job, location, timer)
+        to_do.push({"job": job, 'reference': location, }, seconds)
+
+    # reports
+    job = 'openorders'
+    year, week = dates.get_current_week()
+    for i in range(12):
+        r_year = year + (week + i) // 53
+        r_week = (week + i) % 54
+        timer = (15 * (2 ** i), 0)
+        reference = f'{year},{week}'
+        seconds = get_job_time(job, reference, timer)
+        print(seconds)
+        to_do.push({"job": job, 'reference': reference, }, seconds)
+
+
+    return to_do
+
+
+def difference_in_seconds(first_time, later_time):
+    difference = later_time - first_time
+    seconds_in_day = 24 * 60 * 60
+    return divmod(difference.days * seconds_in_day + difference.seconds, 60)
+
+
+def close_everything():
+    closef2.close()
+    closef2.close()
+    closef2.close()
+
+
+def do_job(system, job):
+    if job['job'] == 'price_location':
+        price_stock_location(job['reference'])
+    elif job['job'] == 'openorders':
+        year, week = job['reference'].split(',')
+        year = int(year)
+        week = int(week)
+
+        reports.update_week(system, year, week)
+    else:
+        return False
+    if get_data.get_time_since_report(system, job['job'], job['reference']):
+        update_data.update_last_done(system, job['job'], job['reference'])
+    else:
+        insert_data.insert_last_done(system, job['job'], job['reference'])
+    return True
+
+
+def system_loop(system, username, password, logged_in):
+    if not logged_in:
+        close_everything()
+        if login.sign_in_toronto(username, password, system, attempts=0):
+            logged_in = True
+    else:
+        get_data.check_priced_lots_bulk("12345", "test")
+        jobs = tasks()
+
+        while True:
+            next_job = jobs.pop()
+            if do_job(system,next_job):
+                break
+            else:
+                print(next_job, 'job failed')
+                exit()
+
+    return logged_in
+
+
 if __name__ == '__main__':
-    ### log in with only one F2 window open
     logged_in = False
-    tries = 0
-    while not logged_in:
-        tries += 1
-        username = f2_password['username']
-        password = f2_password['password']
-        system = 'f2_canada_real'
-        closef2.close()
-        print(f'Login Attempt: {tries}')
-        if tries > 10:
-            closef2.restart_pc()
-        try:
-            if login.sign_in_toronto(username, password, system, attempts=0):
-                logged_in = True
+    username = f2_password['username']
+    password = f2_password['password']
+    system = 'f2_canada_real'
+    last_good = datetime.datetime.now()
 
-        except pyautogui.FailSafeException:
-            print("Corner exit Detected")
-            exit()
-        except:
-            print('error')
-            closef2.close()
-    print("checking for database connection...")
     while True:
-        # wait for database to open
+        last_success = difference_in_seconds(last_good, datetime.datetime.now())
         try:
-            # if database isn't open yet will get error
-            print("connecting to database")
-            get_data.check_priced_lots_bulk("12345", "test")
-            print('database connected...')
-            break
+            logged_in = system_loop(system, username, password, logged_in)
+            last_good = datetime.datetime.now()
         except pyautogui.FailSafeException:
             print("Corner exit Detected")
             exit()
-        except:
-            time.sleep(.5)
-            print("Waiting for Database connection")
-
-    index = 1
-    error_count = 0
-
-    while True:  # main loop
-        try:
-            if error_count > 10:  # if the are 5 failures in a row, restart computer
-                closef2.restart_pc()
-
-            # do the item that is scheduled to do next
-            schedule(system)
-            maintainance(system, index)
-            index += 1
-            print(index)
-
-        except pyautogui.FailSafeException:  # manual stop program
-
-            print("Corner exit Detected")
-            exit()
-
-        except Exception as err:  # on error close f2 and relogin
-            print(err)
-            error_count += 1
-            print(f"error count: {error_count}")
-            try:
-                closef2.close()
-                closef2.close()
-                login.sign_in_toronto(username, password, system, attempts=0)
-
-            except:  # if there is an error closing f2 and relogging in, then restart computer
-                error_count += 1
+        except(OperationalError):
+            print(f"Waiting For Database connection for {last_success[0]} min {last_success[1]} seconds")
+            if last_success[0] > 2:
+                print('Restart')
