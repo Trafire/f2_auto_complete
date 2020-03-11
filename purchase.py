@@ -205,7 +205,7 @@ if __name__ == '__main__':
     # update_purchases(system, '19/12/19')
     #update_data.update_purchase_orders_mark_entered(11, False)
     window.get_window()
-    enter_virtual_purchase(260)
+    enter_virtual_purchase(264)
     #window.get_window()
 
     #enter_purchase_normal('tecligpi+r', '.43', '.43', '5', '100', 'CASPFL')

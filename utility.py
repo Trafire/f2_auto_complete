@@ -49,7 +49,7 @@ def make_list_from_file(system, filename, po_id):
                     assortment = lots.get_lot_info_assortment()
                 keyboard.f12()
                 keyboard.command('down')
-                insert_data.insert_virtual_purchase(assortment_code=assortment['assortment_code'], quantity=10,
+                insert_data.insert_virtual_purchase(assortment_code=assortment['assortment_code'], quantity=4,
                                                     packing=row['St/bx'],
                                                     fob="%0.2f" % row['$ fob'], landed="%0.2f" % row['$ fob'],
                                                     virtual_purchase_order_id=po_id, entered=False)
@@ -241,17 +241,19 @@ def add_weekly_items(system, year, startweek, endweek, supplier_code, purchase_d
         enter_virtual_purchase(virtual_purchase_order_id)
 
 
+
+
 system = 'f2_canada_real'
 
-price = input("what is the price")
-
-try:
-    assortment = add_article()
-except:
-    assortment = lots.get_lot_info_assortment()
-
-for week in range(12,54):
-    update_data.update_weekly_price(system,2020,week, assortment['assortment_code'], price)
+# price = input("what is the price")
+# #
+# try:
+#     assortment = add_article()
+# except:
+#     assortment = lots.get_lot_info_assortment()
+#
+# for week in range(12,54):
+#     update_data.update_weekly_price(system,2020,week, assortment['assortment_code'], price)
 
 # while True:
 #     add_article()
@@ -396,3 +398,4 @@ for week in range(12,54):
 # #
 # # offer_end = {'day': 'Wednesday', 'hour': 16, 'minute': 30, 'advance_weeks': 1}
 # # add_weekly_items(system, year, 15, 16, 'CAGOLF', 'Monday', 'Saturday', offer_end, codes)
+make_list_from_file(system, r'D:/weekly/ecuador_11.xlsx', 261)

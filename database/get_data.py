@@ -161,7 +161,6 @@ def remove_null_priced_lots_specials(lots, system):
                     ;'''
     if len(lots) == 1:
         query = str(query.replace(f'IN {lots}', f"= '{lots[0]}'"))
-    print(query)
     answer = connection.execute(query).fetchall()
     connection.close()
     result = []
