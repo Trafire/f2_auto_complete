@@ -58,11 +58,11 @@ def tasks():
     # reports
     job = 'openorders'
     year, week = dates.get_current_week()
-    for i in range(12):
+    for i in range(0, 12):
         r_year = year + (week + i) // 53
         r_week = (week + i) % 54
         timer = (15 * (2 ** i), 0)
-        reference = f'{year},{week}'
+        reference = f'{r_year},{r_week}'
         seconds = get_job_time(job, reference, timer)
         to_do.push({"job": job, 'reference': reference, }, seconds)
 

@@ -151,7 +151,7 @@ def get_actual_stock_locations(system, from_date, to_date, attempt=0, virtual=Fa
         if len(locations) == 0:
             return get_actual_stock_locations(system, from_date, to_date, attempt + 1, virtual=virtual)
         return locations
-    return []
+    return get_actual_stock_locations(system, from_date, to_date, attempt + 1, virtual=virtual)
 
 def get_virtual_stock_locations(system, from_date, to_date, attempt=0):
     if attempt > 10:
@@ -161,7 +161,7 @@ def get_virtual_stock_locations(system, from_date, to_date, attempt=0):
         if len(locations) == 0:
             return get_actual_stock_locations(system, from_date, to_date, attempt + 1)
         return locations
-    return []
+    return get_actual_stock_locations(system, from_date, to_date, attempt + 1)
 
 def stock_per_location_location(system, from_date, to_date, location, attempt=0, virtual=False):
     if attempt > 10:
