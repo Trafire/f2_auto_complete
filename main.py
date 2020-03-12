@@ -64,7 +64,6 @@ def tasks():
         timer = (15 * (2 ** i), 0)
         reference = f'{year},{week}'
         seconds = get_job_time(job, reference, timer)
-        print(seconds)
         to_do.push({"job": job, 'reference': reference, }, seconds)
 
     return to_do
@@ -125,10 +124,12 @@ if __name__ == '__main__':
     username = f2_password['username']
     password = f2_password['password']
     system = 'f2_canada_real'
+    start_time = datetime.datetime.now()
     last_good = datetime.datetime.now()
 
     while True:
         last_success = difference_in_seconds(last_good, datetime.datetime.now())
+        run_time = difference_in_seconds(start_time, datetime.datetime.now())
         try:
             logged_in = system_loop(system, username, password, logged_in)
             last_good = datetime.datetime.now()
@@ -139,3 +140,6 @@ if __name__ == '__main__':
             print(f"Waiting For Database connection for {last_success[0]} min {last_success[1]} seconds")
             if last_success[0] > 3:
                 closef2.restart_pc()
+        if run_time[0] >  240:
+            close_everything()
+            closef2.restart_pc()
