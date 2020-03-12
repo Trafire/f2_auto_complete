@@ -64,6 +64,7 @@ def enter_virtual_purchase(purchase_order_id):
     visible_to_date= dates.get_menu_date(visible_to)
     visible_to_hours = dates.get_time(visible_to)
     traverse.main_menu_purchase_default_insert_virtual_purchase_flowers_date(system, purchase_date)
+    time.sleep(1)
     set_availability_dates(purchase_date, end_date, visible_from_date, visible_from_time, visible_to_date, visible_to_hours)
     keyboard.command('insert')
     keyboard.f12()
@@ -216,7 +217,7 @@ if __name__ == '__main__':
     #update_data.update_purchase_orders_mark_entered(11, False)
     window.get_window()
     print(get_virtual_purchase_todo())
-    #enter_virtual_purchase(259)
+    enter_virtual_purchase(259)
     #window.get_window()
 
     #enter_purchase_normal('tecligpi+r', '.43', '.43', '5', '100', 'CASPFL')
