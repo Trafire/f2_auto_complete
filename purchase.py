@@ -64,9 +64,10 @@ def enter_virtual_purchase(purchase_order_id):
     visible_to_date= dates.get_menu_date(visible_to)
     visible_to_hours = dates.get_time(visible_to)
     traverse.main_menu_purchase_default_insert_virtual_purchase_flowers_date(system, purchase_date)
-    time.sleep(1)
-    if '═Lot╦Description════' not in window.get_window():
-        keyboard.enter()
+    # time.sleep(1)
+    # if '═Lot╦Description════' not in window.get_window():
+    #     keyboard.enter()
+
 
     set_availability_dates(purchase_date, end_date, visible_from_date, visible_from_time, visible_to_date, visible_to_hours)
     keyboard.command('insert')

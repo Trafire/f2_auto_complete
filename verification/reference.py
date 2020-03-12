@@ -138,7 +138,7 @@ VERIFICATION['screens'] = {
                                                            {'target': 'Purchase', 'location': (11, 55)},
                                                            {'target': 'Purchase/distribute', 'location': (5, 55)}],
     'main_menu-purchase-default_insert_virtual_purchase_flowers': [
-        {'target': '║Flowers             ║', 'location': (4, 54)},
+        #{'target': '║Flowers             ║', 'location': (4, 54)},
         {'target': 'Insert virtual purchases', 'location': (2, 92)}],
     'main_menu-purchase-default-input_purchases': [{'target': '║Flowers             ║', 'location': (4, 54)},
                                                    {'target': 'Input purchases', 'location': (2, 92)}],
