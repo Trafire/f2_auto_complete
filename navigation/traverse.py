@@ -145,23 +145,23 @@ def main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date
 
 def get_actual_stock_locations(system, from_date, to_date, attempt=0, virtual=False):
     if attempt > 10:
-        return False
+        return []
     if main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=virtual):
         locations = parse.get_stock_locations()
         if len(locations) == 0:
             return get_actual_stock_locations(system, from_date, to_date, attempt + 1, virtual=virtual)
         return locations
-    return False
+    return []
 
 def get_virtual_stock_locations(system, from_date, to_date, attempt=0):
     if attempt > 10:
-        return False
+        return []
     if main_menu_stock_stock_per_location_edit_stock_date_flowers(system, from_date, to_date, attempt=0, virtual=True):
         locations = parse.get_stock_locations()
         if len(locations) == 0:
             return get_actual_stock_locations(system, from_date, to_date, attempt + 1)
         return locations
-    return False
+    return []
 
 def stock_per_location_location(system, from_date, to_date, location, attempt=0, virtual=False):
     if attempt > 10:
