@@ -6,7 +6,8 @@ from sqlalchemy.exc import OperationalError
 
 import closef2
 import login
-import reports, purchase
+import purchase
+import reports
 from auth.passwords import f2_password
 from database import get_data, update_data, insert_data
 from parse import dates
@@ -68,9 +69,9 @@ def tasks():
 
     today = datetime.datetime.today()
     for i in range(31):
-        timer = (30 + 30 * i,0)
+        timer = (30 + 30 * i, 0)
         purchase_date = today + datetime.timedelta(days=i)
-        job ='input_purchase'
+        job = 'input_purchase'
         reference = dates.get_database_date(purchase_date)
         seconds = get_job_time(job, reference, timer)
         to_do.push({"job": job, 'reference': reference, }, seconds)
@@ -127,18 +128,18 @@ def system_loop(system, username, password, logged_in):
             else:
                 print(next_job, 'job failed')
 
-
     return logged_in
 
 
 if __name__ == '__main__':
-    logged_in = True
+    logged_in = False
     username = f2_password['username']
     password = f2_password['password']
     system = 'f2_canada_real'
     start_time = datetime.datetime.now()
     last_good = datetime.datetime.now()
-
+    cycle = 0
+    cycle_size = 30
     while True:
         last_success = difference_in_seconds(last_good, datetime.datetime.now())
         run_time = difference_in_seconds(start_time, datetime.datetime.now())
@@ -152,6 +153,11 @@ if __name__ == '__main__':
             print(f"Waiting For Database connection for {last_success[0]} min {last_success[1]} seconds")
             if last_success[0] > 3:
                 closef2.restart_pc()
-        if run_time[0] >  240:
+        if run_time[0] > 240:
             close_everything()
             closef2.restart_pc()
+        elif run_time[0] // cycle_size > cycle:
+            cycle += 1
+            close_everything()
+            logged_in = False
+            print(f"Starting Cycle {cycle}")
