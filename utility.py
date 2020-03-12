@@ -49,7 +49,7 @@ def make_list_from_file(system, filename, po_id):
                     assortment = lots.get_lot_info_assortment()
                 keyboard.f12()
                 keyboard.command('down')
-                insert_data.insert_virtual_purchase(assortment_code=assortment['assortment_code'], quantity=4,
+                insert_data.insert_virtual_purchase(assortment_code=assortment['assortment_code'], quantity=15,
                                                     packing=row['St/bx'],
                                                     fob="%0.2f" % row['$ fob'], landed="%0.2f" % row['$ fob'],
                                                     virtual_purchase_order_id=po_id, entered=False)
@@ -261,9 +261,9 @@ system = 'f2_canada_real'
 #     input('next')
 #     time.sleep(.1)
 
-# filename = r'D:/mday2020/mother2020.xlsx'
-# a = make_list_from_file(system, filename, 259)
-# print(a)
+filename = r'D:/mday2020/mother2020.xlsx'
+a = make_list_from_file(system, filename, 259)
+print(a)
 
 # # set_prices(system, assortment_code,year, 10, 54, price)
 #
@@ -398,4 +398,4 @@ system = 'f2_canada_real'
 # #
 # # offer_end = {'day': 'Wednesday', 'hour': 16, 'minute': 30, 'advance_weeks': 1}
 # # add_weekly_items(system, year, 15, 16, 'CAGOLF', 'Monday', 'Saturday', offer_end, codes)
-make_list_from_file(system, r'D:/weekly/ecuador_11.xlsx', 261)
+#zmake_list_from_file(system, r'D:/weekly/ecuador_11.xlsx', 261)

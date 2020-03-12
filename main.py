@@ -6,7 +6,7 @@ from sqlalchemy.exc import OperationalError
 
 import closef2
 import login
-import reports
+import reports, purchase
 from auth.passwords import f2_password
 from database import get_data, update_data, insert_data
 from parse import dates
@@ -66,6 +66,15 @@ def tasks():
         seconds = get_job_time(job, reference, timer)
         to_do.push({"job": job, 'reference': reference, }, seconds)
 
+    today = datetime.datetime.today()
+    for i in range(31):
+        timer = (30 + 30 * i,0)
+        purchase_date = today + datetime.timedelta(days=i)
+        job ='input_purchase'
+        reference = dates.get_database_date(purchase_date)
+        seconds = get_job_time(job, reference, timer)
+        to_do.push({"job": job, 'reference': reference, }, seconds)
+
     return to_do
 
 
@@ -88,8 +97,11 @@ def do_job(system, job):
         year, week = job['reference'].split(',')
         year = int(year)
         week = int(week)
-
         reports.update_week(system, year, week)
+    elif job['job'] == 'input_purchase':
+        day = dates.database_date(job['reference'])
+        purchase.update_purchases(system, day)
+
     else:
         return False
     if get_data.get_time_since_report(system, job['job'], job['reference']):
@@ -114,13 +126,13 @@ def system_loop(system, username, password, logged_in):
                 break
             else:
                 print(next_job, 'job failed')
-                exit()
+
 
     return logged_in
 
 
 if __name__ == '__main__':
-    logged_in = False
+    logged_in = True
     username = f2_password['username']
     password = f2_password['password']
     system = 'f2_canada_real'
