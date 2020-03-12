@@ -9,10 +9,9 @@ from database.connect import c_engine
 def get_virtual_purchase_order(reference):
     connection = engine.connect()
     query = ''' SELECT * from f2connection_virtualpurchaseorder WHERE id=%s'''
-    data =  connection.execute(query, (reference,)).fetchone()
+    data = connection.execute(query, (reference,)).fetchone()
     connection.close()
     return data
-
 
 
 def get_time_since_report(system, action, reference):
@@ -74,6 +73,7 @@ def get_category_name(category_code):
     if answer:
         return answer[0]
 
+
 def get_virtual_purchases_from_order(order):
     connection = engine.connect()
     query = '''SELECT * from f2connection_virtualpurchases where virtual_purchase_order_id=%s'''
@@ -82,6 +82,15 @@ def get_virtual_purchases_from_order(order):
     if answer:
         return answer
 
+def get_virtual_purchases_unentered():
+    #toda make function work with multiple systems
+    connection = engine.connect()
+    query = '''SELECT * from f2connection_virtualpurchases where entered=false'''
+    answer = connection.execute(query).fetchone()
+    connection.close()
+    if answer:
+        return answer
+    return None
 
 """def get_lot_price(lot, system):
     engine = c_engine()
@@ -107,6 +116,7 @@ def check_priced_lots(lot, system):
     connection.close()
     return bool(answer[0])
 
+
 def get_null_recommended(system, lots):
     if not lots:
         return []
@@ -125,7 +135,6 @@ def get_null_recommended(system, lots):
     connection.close()
     result = []
     for l in answer:
-
         result.append(l[0])
     return result
 
@@ -310,11 +319,7 @@ def get_stock_purchase_date(lot):
                                         WHERE purchase_date='{purchase_date}';'''
 
 
-
-
-
 engine = c_engine()
-
 
 if '__main__' == __name__:
     system = 'f2_canada_real'
@@ -327,11 +332,8 @@ if '__main__' == __name__:
             '649245',
             '648696',
             '648004']
-    #print(remove_null_priced_lots_specials(lots, system))
+    # print(remove_null_priced_lots_specials(lots, system))
     # print(get_purchases_assortment_null(system))
     # lots = ['639690', '641538', '640571']
     # print(check_priced_lots_bulk(lots, system))
     # print(get_articles_codes(system))
-
-
-

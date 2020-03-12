@@ -5,6 +5,16 @@ import time, datetime
 from database import update_data, get_data, insert_data
 
 
+
+def get_virtual_purchase_todo():
+    purchase =  get_data.get_virtual_purchases_unentered()
+    if purchase:
+        return purchase[-2]
+    return None
+
+
+
+
 ##### Availability
 def set_availability_dates(from_date,to_date, cut_off_start_date,cut_off_start_time, cut_off_date,cut_off_time):
     time.sleep(1)
@@ -205,7 +215,8 @@ if __name__ == '__main__':
     # update_purchases(system, '19/12/19')
     #update_data.update_purchase_orders_mark_entered(11, False)
     window.get_window()
-    enter_virtual_purchase(259)
+    print(get_virtual_purchase_todo())
+    #enter_virtual_purchase(259)
     #window.get_window()
 
     #enter_purchase_normal('tecligpi+r', '.43', '.43', '5', '100', 'CASPFL')

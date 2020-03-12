@@ -42,6 +42,8 @@ def get_job_time(job, reference, timer):
 
 def tasks():
     to_do = PriorityQueue()
+    priority = 9999999999999
+    priority_level_2 = priority - 1
 
     # price location
     for location in SHIPMENT_LOCATIONS:
@@ -76,6 +78,11 @@ def tasks():
         seconds = get_job_time(job, reference, timer)
         to_do.push({"job": job, 'reference': reference, }, seconds)
 
+    virtual_purchase_order = purchase.get_virtual_purchase_todo()
+    if virtual_purchase_order:
+        to_do.push({"job": 'virtual_purchase_order', 'reference': str(virtual_purchase_order), }, priority_level_2)
+
+
     return to_do
 
 
@@ -102,7 +109,8 @@ def do_job(system, job):
     elif job['job'] == 'input_purchase':
         day = dates.database_date(job['reference'])
         purchase.update_purchases(system, day)
-
+    elif job['job'] == 'virtual_purchase_order':
+        purchase.enter_virtual_purchase(job['reference'])
     else:
         return False
     if get_data.get_time_since_report(system, job['job'], job['reference']):
