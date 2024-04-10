@@ -1,7 +1,7 @@
 MouseInfo==0.1.2
 Pillow==9.3.0
 psycopg2==2.8.4
-py==1.8.0
+py==1.10.0
 PyAutoGUI==0.9.48
 PyGetWindow==0.0.8
 PyMsgBox==1.0.7
